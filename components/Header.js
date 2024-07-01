@@ -16,6 +16,8 @@ const styles = StyleSheet.create({
         backgroundColor: 'green',
         alignItems: 'center',
         justifyContent: 'center',
+        position: 'absolute',
+        top: 0,
     },
     headerTitle: {
         color: 'white',
