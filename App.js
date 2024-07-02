@@ -1,9 +1,12 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import Header from './components/Header'; 
 import { ImageBackground } from 'react-native';
 import Button from './components/Button';
+
+// import Navigation from './components/Navigation';
+
 
 export default function App() {
   return (
@@ -11,7 +14,7 @@ export default function App() {
     
     <View style={styles.container}>
       <Header title="Parkfinite" />
-      
+       {/* <Navigation/>  */}
       <ImageBackground source={require(
     './assets/background.png')} style={styles.background}>
         <View style={styles.buttonContainer}>
@@ -23,7 +26,16 @@ export default function App() {
         <Button
           title="Log In"
         />
+
+
         </View>
+        <Button
+          style={styles.continueAsGuestButton}
+          title="Continue as guest"
+        />
+        <Text style={styles.label}>Guests on this site are restricted to viewing level 1 campsites, and not being able to post or comment</Text>
+
+
        </ImageBackground>
        
       <StatusBar style="auto" />
@@ -54,10 +66,24 @@ const styles = StyleSheet.create({
     justifyContent: 'center', 
     alignItems: 'center', 
     position: 'static', 
-    bottom: 400, 
+    bottom: 0, 
   },
   button: {
     marginHorizontal: 100,
+  },  
+
+  continueAsGuestButton: {
+    fontSize: 9,
+    
+  },
+
+  label: {
+    padding: 50,
+    color: '#333',   
+    alignItems: 'center', 
   }
+
+
+
   
 });
