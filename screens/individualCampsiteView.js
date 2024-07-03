@@ -22,10 +22,3 @@ const styles = StyleSheet.create({
 });
 
 export default IndividualCampsiteView;
-
-{/* <NavigationContainer>
-<Stack.Navigator initialRouteName="SearchCampsiteView">
-  <Stack.Screen name="SearchCampsiteView" component={SearchCampsiteView} options={{ headerShown: false }} />
-  <Stack.Screen name="IndividualCampsiteView" component={IndividualCampsiteView} options={{ title: 'Individual Campsite' }} />
-</Stack.Navigator>
-</NavigationContainer> */}

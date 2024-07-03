@@ -1,17 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Alert, TouchableOpacity, Text, useNavigation } from 'react-native';
+import { StyleSheet, View, Alert, TouchableOpacity, Text, Button } from 'react-native';
 import MapView, { Marker, Polyline } from 'react-native-maps';
 import * as Location from 'expo-location';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FontAwesome } from '@expo/vector-icons'; 
-import IndividualCampsiteView from './individualCampsiteView'
+import { useNavigation } from '@react-navigation/native'; // Import useNavigation for navigation
 
-
-function goToIndividualCampsite() {
-
-const navigation = useNavigation()
-
-}
 const locations = [
   { id: '1', title: 'Campsite 1', description: 'Beautiful campsite in the countryside', latitude: 51.5074, longitude: -0.1278 }, // London
   { id: '2', title: 'Campsite 2', description: 'Peaceful site near the coast', latitude: 52.3555, longitude: -1.1743 }, // Midlands
@@ -25,7 +19,9 @@ const Map = () => {
   const [destination, setDestination] = useState(null);
   const [favorites, setFavorites] = useState([]);
   const [customMarker, setCustomMarker] = useState(null);
-  
+  const [selectedCampsite, setSelectedCampsite] = useState(null); // State for selected campsite
+  const navigation = useNavigation(); // Use useNavigation for navigation
+
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -63,10 +59,10 @@ const Map = () => {
       Alert.alert('Error', 'Failed to save campsite to favorites.');
     }
   };
+
   const handleMapPress = (e) => {
     const { coordinate } = e.nativeEvent;
     setCustomMarker(coordinate);
-   
   };
 
   const handleNavigate = async (location) => {
@@ -75,6 +71,10 @@ const Map = () => {
     } else {
       Alert.alert('Location not available', 'Unable to retrieve your current location.');
     }
+  };
+
+  const goToIndividualCampsite = (location) => {
+    navigation.navigate('IndividualCampsiteView', { location });
   };
 
   return (
@@ -96,23 +96,13 @@ const Map = () => {
           />
         )}
         {locations.map((location) => (
-          
           <Marker
-      
             key={location.id}
             coordinate={{ latitude: location.latitude, longitude: location.longitude }}
             title={location.title}
             description={location.description}
-            onPress={() => handleNavigate(location)}
-            
-          >
-            
-            <TouchableOpacity onPress={() => 
-              
-              ("IndividualCampsiteView")}>
-              <FontAwesome name="heart" size={24} color="red" />
-            </TouchableOpacity>
-          </Marker>
+            onPress={() => setSelectedCampsite(location)} // Set selected campsite on marker press
+          />
         ))}
         {destination && (
           <>
@@ -133,8 +123,18 @@ const Map = () => {
             )}
           </>
         )}
-        
       </MapView>
+
+      {selectedCampsite && (
+        <View style={styles.campsiteInfo}>
+          <Text style={styles.title}>{selectedCampsite.title}</Text>
+          <Text style={styles.description}>{selectedCampsite.description}</Text>
+          <Button
+            title="Go to Individual Campsite"
+            onPress={() => goToIndividualCampsite(selectedCampsite)}
+          />
+        </View>
+      )}
     </View>
   );
 };
@@ -148,14 +148,40 @@ const styles = StyleSheet.create({
   map: {
     ...StyleSheet.absoluteFillObject,
   },
-  favorite: {
-    fontSize: 24,
-    color: 'red',
+  campsiteInfo: {
+    position: 'absolute',
+    bottom: 50,
+    left: 10,
+    right: 10,
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 5,
   },
-  callout: {
-    width: 150,
-    padding: 10,
-  }
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  description: {
+    fontSize: 14,
+    marginVertical: 10,
+  },
+  button: {
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    padding: 5,
+    borderRadius: 5,
+    borderColor: 'black',
+    borderWidth: 1,
+  },
+  buttonText: {
+    color: 'black',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
 });
 
 export default Map;
