@@ -4,6 +4,8 @@ import Map from './mapView'
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { TextInput } from "react-native";
 import SearchBarInput from '../components/elements'
+import IndividualCampsiteView from "./individualCampsiteView";
+
 
 
 const SearchCampsiteView = ({ navigation }) => {
@@ -14,7 +16,7 @@ const SearchCampsiteView = ({ navigation }) => {
     };
     return (
         <View style={styles.container}>
-      <Map />
+       <Map /> 
       <TouchableOpacity style={styles.usernameButton} onPress={handleUsernamePress}>
         <Text style={styles.buttonText}>{username}</Text>
       </TouchableOpacity>
@@ -53,4 +55,6 @@ const styles = StyleSheet.create({
     
   });
   
+  
 export default SearchCampsiteView
+

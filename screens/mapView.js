@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Alert, TouchableOpacity, Text } from 'react-native';
+import { StyleSheet, View, Alert, TouchableOpacity, Text, useNavigation } from 'react-native';
 import MapView, { Marker, Polyline } from 'react-native-maps';
 import * as Location from 'expo-location';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FontAwesome } from '@expo/vector-icons'; 
+import IndividualCampsiteView from './individualCampsiteView'
 
 
+function goToIndividualCampsite() {
+
+const navigation = useNavigation()
+
+}
 const locations = [
   { id: '1', title: 'Campsite 1', description: 'Beautiful campsite in the countryside', latitude: 51.5074, longitude: -0.1278 }, // London
   { id: '2', title: 'Campsite 2', description: 'Peaceful site near the coast', latitude: 52.3555, longitude: -1.1743 }, // Midlands
@@ -90,14 +96,20 @@ const Map = () => {
           />
         )}
         {locations.map((location) => (
+          
           <Marker
+      
             key={location.id}
             coordinate={{ latitude: location.latitude, longitude: location.longitude }}
             title={location.title}
             description={location.description}
             onPress={() => handleNavigate(location)}
+            
           >
-            <TouchableOpacity onPress={() => saveFavorite(location)}>
+            
+            <TouchableOpacity onPress={() => 
+              
+              ("IndividualCampsiteView")}>
               <FontAwesome name="heart" size={24} color="red" />
             </TouchableOpacity>
           </Marker>

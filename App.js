@@ -7,6 +7,7 @@ import Header from './components/Header';
 import { ImageBackground } from 'react-native';
 import Button from './components/Button';
 import SearchCampsiteView from './screens/searchCampsiteView'
+import IndividualCampsiteView from './screens/individualCampsiteView';
 
 const Stack = createStackNavigator();
 
@@ -17,6 +18,7 @@ export default function App() {
       <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
         <Stack.Screen name="SearchCampsiteView" component={SearchCampsiteView} options={{ title: 'Search Campsite' }} />
+        <Stack.Screen name="IndividualCampsiteView" component={IndividualCampsiteView} options={{ title: 'View Campsite' }}  />
       </Stack.Navigator>
     </NavigationContainer>
   );
