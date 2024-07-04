@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, View, Text } from "react-native";
+import { Button, View, Text, SafeAreaView } from "react-native";
 import Map from './mapView'
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { TextInput } from "react-native";
