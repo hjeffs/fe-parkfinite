@@ -9,7 +9,7 @@ function HomeScreen() {
     const navigation = useNavigation();
    
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <Header title="Parkfinite" />
         <ImageBackground source={require('../assets/background.png')} style={styles.background}>
           <View style={styles.buttonContainer}>
@@ -25,7 +25,7 @@ function HomeScreen() {
             Guests on this site are restricted to viewing level 1 campsites, and not being able to post or comment
           </Text>
         </ImageBackground>
-      </View>
+      </SafeAreaView>
     );
   }
   

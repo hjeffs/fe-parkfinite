@@ -1,14 +1,14 @@
-// import { axios } from "axios";
+import  axios  from 'axios';
 
-// const parkfiniteApi = axios.create({
-//     baseURL: 'https://www.google.co.uk' //placeholder 
-// })
+const parkfiniteApi = axios.create({
+    baseURL: 'https://parkfinite-api.onrender.com' 
+})
 
-// export const getCampsites = (campsites) => {
-//     return parkfiniteApi
-//     .get('/')
-//     .then((res) => {
-//         console.log (res.data)
-//         return res.data
-//     })
-// }
+export const getCampsites = () => {
+    return parkfiniteApi
+    .get('/campsites')
+    .then((res) => {
+        console.log (res.data)
+        return res.data
+    })
+}
