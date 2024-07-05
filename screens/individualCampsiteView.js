@@ -5,20 +5,37 @@ import { FlatList } from "react-native-web";
 import Images from "../components/images";
 import {AddToFavouritesButton} from '../components/elements'
 import ReviewForm from "../components/ReviewForm";
+import {useRoute} from '@react-navigation/native'
+import { getCampsiteByID } from "../utils/api";
+import { useState, useEffect } from "react";
 
-
-const IndividualCampsiteView = ({campsite_id}) => {
+const IndividualCampsiteView = () => {
     const username = "Guest"; 
   
     const handleUsernamePress = () => {
       
     };
 
+  const route = useRoute();
+  const campsite_id  = route.params;
+  
+  
+  const [campsite, setCampsite] = useState({});
+
+  useEffect(() => {
+    getCampsiteByID(campsite_id)
+    .then((data) => {
+     
+      setCampsite(data)
+    })
+  }, [campsite_id])
     
+  
+        
     return (
        <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.container}>
-            <Header title="Campsite Name"/>
+            <Header title={campsite.campsite_name}/>
             <TouchableOpacity style={styles.usernameButton} onPress={handleUsernamePress}>
         <Text style={styles.buttonText}>{username}</Text>
       </TouchableOpacity>
@@ -26,22 +43,29 @@ const IndividualCampsiteView = ({campsite_id}) => {
       <View style={styles.imagesContainer}>
           <Images />
         </View>
-      <View style={styles.sectionContainer}>
-        <Text style={styles.sections}>Address</Text>
-        <Text style={styles.text}>This is where address goes</Text>
-        <Text style={styles.sections}>
-            Facilities</Text>
-<Text style={styles.text}> These are the facilities the campsite has </Text>
-<Text style={styles.sections}>
-            Prices </Text>
-        <Text style={styles.text}>These are the prices</Text>
+        <View style={styles.sectionContainer}>
+          <Text style={styles.sections}>Contact Information</Text>
+          <View style={styles.contactContainer}>
+            {Array.isArray(campsite.contact) && campsite.contact.map((person) => (
+              <View key={person.campsite_contact_id} style={styles.contactItem}>
+                <Text style={styles.contactInfo}>Contact Name: {person.campsite_contact_name}</Text>
+                <Text style={styles.contactInfo}>Phone: {person.campsite_contact_phone}</Text>
+                <Text style={styles.contactInfo}>Email: {person.campsite_contact_email || 'N/A'}</Text>
+              </View>
+            ))}
+          </View>
+          {/* <Text style={styles.sections}>Facilities</Text> */}
+          {/* <Text style={styles.text}>These are the facilities the campsite has</Text> */}
+          <Text style={styles.sections}>Category</Text>
+          <Text style={styles.text}>{campsite.category.category_name}</Text>
+          <Text style={styles.sections}>Prices</Text>
+          <Text style={styles.text}>Parking: £{campsite.parking_cost}</Text>
+          <Text style={styles.text}>Facilities: £{campsite.facilities_cost}</Text>
         </View>
         <View style={styles.reviewsContainer}>
-            <Text style={styles.sections}>Reviews</Text>
-            <Text style={styles.text}>
-                This is where reviews go
-                           </Text>
-        <ReviewForm />
+          <Text style={styles.sections}>Reviews</Text>
+          <Text style={styles.text}>This is where reviews go</Text>
+          <ReviewForm />
         </View>
         
         </View>
@@ -52,12 +76,12 @@ const IndividualCampsiteView = ({campsite_id}) => {
 const styles = StyleSheet.create({
     scrollView: {
         flex: 1,
-        backgroundColor: '#fff', // Ensure background color fills the screen
+        backgroundColor: '#fff', 
       },
       scrollViewContent: {
         flexGrow: 1,
-        paddingBottom: 20, // Optional padding at the bottom if needed
-        paddingTop: 100, // Adjust this value based on your header height
+        paddingBottom: 20, 
+        paddingTop: 100, 
         alignItems: 'center',
         justifyContent: 'flex-start',
       },
@@ -120,7 +144,25 @@ const styles = StyleSheet.create({
       text: {
         textAlign: 'center',
       },
-    
+      contactContainer: {
+        textAlign: 'center',
+        fontSize: 16,
+        marginBottom: 16,
+      },
+      contactContainer: {
+        marginBottom: 1,
+        alignItems: 'center', 
+      },
+      contactItem: {
+        marginBottom: 1,
+        alignItems: 'center', 
+      },
+      contactInfo: {
+        fontSize: 16,
+        textAlign: 'center', 
+        marginBottom: 4,
+      },
+     
 });
 
 export default IndividualCampsiteView;
