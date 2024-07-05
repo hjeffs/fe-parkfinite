@@ -43,3 +43,19 @@ export const getCampsiteByID = (campsite_id) => {
         throw error; 
       });
 }
+
+
+
+
+export const getReviewByCampsiteID = (campsite_id) => {
+    
+  return parkfiniteApi
+  .get(`/campsites/${campsite_id}/reviews`)
+  .then((res) => {
+    console.log(res.data)
+      return res.data
+  })
+  .catch((error) => {
+      throw error; 
+    });
+}

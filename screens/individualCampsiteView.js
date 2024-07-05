@@ -8,6 +8,7 @@ import ReviewForm from "../components/ReviewForm";
 import {useRoute} from '@react-navigation/native'
 import { getCampsiteByID } from "../utils/api";
 import { useState, useEffect } from "react";
+import CampsiteReviews from "../components/ReviewForm"
 
 const IndividualCampsiteView = () => {
     const username = "Guest"; 
@@ -25,7 +26,6 @@ const IndividualCampsiteView = () => {
   useEffect(() => {
     getCampsiteByID(campsite_id)
     .then((data) => {
-     
       setCampsite(data)
     })
   }, [campsite_id])
@@ -56,13 +56,14 @@ const IndividualCampsiteView = () => {
           </View>
           {/* <Text style={styles.sections}>Facilities</Text> */}
           {/* <Text style={styles.text}>These are the facilities the campsite has</Text> */}
-          <Text style={styles.sections}>Category</Text>
-          <Text style={styles.text}>{campsite.category.category_name}</Text>
+          {campsite.category && ( <><Text style={styles.sections}>Category</Text>
+          <Text style={styles.text}>{campsite.category.category_name}</Text></> )}
           <Text style={styles.sections}>Prices</Text>
           <Text style={styles.text}>Parking: £{campsite.parking_cost}</Text>
           <Text style={styles.text}>Facilities: £{campsite.facilities_cost}</Text>
         </View>
         <View style={styles.reviewsContainer}>
+          <CampsiteReviews campsite_id = {campsite_id}/>
           <Text style={styles.sections}>Reviews</Text>
           <Text style={styles.text}>This is where reviews go</Text>
           <ReviewForm />
