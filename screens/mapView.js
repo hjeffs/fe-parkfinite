@@ -16,10 +16,11 @@ import { getCampsites } from '../utils/api';
     
     
     
-      const [campsites, setCampsites] = useState([])
+    const [campsites, setCampsites] = useState([])
     
       useEffect(() => {
         getCampsites().then((campsites) => {
+        
           setCampsites(campsites)
   
         })
@@ -79,8 +80,10 @@ import { getCampsites } from '../utils/api';
     }
   };
 
-  const goToIndividualCampsite = (location) => {
-    navigation.navigate('IndividualCampsiteView', { location });
+  const goToIndividualCampsite = (campsite) => {
+    navigation.navigate('IndividualCampsiteView',  campsite.campsite_id);
+    
+    
   };
 
   return (
