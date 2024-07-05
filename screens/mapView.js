@@ -6,22 +6,26 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FontAwesome } from '@expo/vector-icons'; 
 import { useNavigation } from '@react-navigation/native'; // Import useNavigation for navigation
 import { getCampsites } from '../utils/api';
-
-const locations = getCampsites()
-// [
-//   { id: '1', title: 'Campsite 1', description: 'Beautiful campsite in the countryside', latitude: 51.5074, longitude: -0.1278 }, // London
-//   { id: '2', title: 'Campsite 2', description: 'Peaceful site near the coast', latitude: 52.3555, longitude: -1.1743 }, // Midlands
-//   { id: '3', title: 'Campsite 3', description: 'Family-friendly campsite with amenities', latitude: 53.483959, longitude: -2.244644 }, // Manchester
-//   { id: '4', title: 'Campsite 4', description: 'Remote campsite with stunning views', latitude: 54.978252, longitude: -1.617439 }, // Newcastle
-//   { id: '5', title: 'Campsite 5', description: 'Lakeside campsite perfect for fishing', latitude: 54.8985, longitude: -2.9323 }, // Lake District
-// ];
-
-const Map = () => {
-  const [currentLocation, setCurrentLocation] = useState(null);
-  const [destination, setDestination] = useState(null);
-  const [favorites, setFavorites] = useState([]);
-  const [customMarker, setCustomMarker] = useState(null);
-  const [selectedCampsite, setSelectedCampsite] = useState(null); // State for selected campsite
+  
+  const Map = () => {
+    const [currentLocation, setCurrentLocation] = useState(null);
+    const [destination, setDestination] = useState(null);
+    const [favorites, setFavorites] = useState([]);
+    const [customMarker, setCustomMarker] = useState(null);
+    const [selectedCampsite, setSelectedCampsite] = useState(null); // State for selected campsite
+    
+    
+    
+      const [campsites, setCampsites] = useState([])
+    
+      useEffect(() => {
+        getCampsites().then((campsites) => {
+          setCampsites(campsites)
+  
+        })
+      }, [])
+    
+    
   const navigation = useNavigation(); // Use useNavigation for navigation
 
   useEffect(() => {
@@ -97,11 +101,11 @@ const Map = () => {
             title="Current Location"
           />
         )}
-        {locations.map((location) => (
+        {campsites.map((location) => (
           <Marker
-            key={location.id}
+            key={location.campsite_id}
             coordinate={{ latitude: location.latitude, longitude: location.longitude }}
-            title={location.title}
+            name={location.name}
             description={location.description}
             onPress={() => setSelectedCampsite(location)} // Set selected campsite on marker press
           />
@@ -138,8 +142,8 @@ const Map = () => {
         </View>
       )}
     </View>
-  );
-};
+  );}
+
 
 const styles = StyleSheet.create({
   container: {
