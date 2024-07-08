@@ -4,18 +4,20 @@ import Header from "../components/Header";
 import { FlatList } from "react-native-web";
 import Images from "../components/images";
 import {AddToFavouritesButton} from '../components/elements'
-import ReviewForm from "../components/ReviewForm";
 import {useRoute} from '@react-navigation/native'
 import { getCampsiteByID } from "../utils/api";
 import { useState, useEffect } from "react";
-import CampsiteReviews from "../components/ReviewForm"
+import { ReviewList } from "../components/ReviewList";
+import { UserContext } from "../utils/UserContext";
+import { useContext } from 'react';
 
 const IndividualCampsiteView = () => {
-    const username = "Guest"; 
+  const {user, setUser} = useContext(UserContext)
+  const handleUsernamePress = () => {
+    
+  };
   
-    const handleUsernamePress = () => {
-      
-    };
+   
 
   const route = useRoute();
   const campsite_id  = route.params;
@@ -30,23 +32,24 @@ const IndividualCampsiteView = () => {
     })
   }, [campsite_id])
     
-  
+
         
     return (
        <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.container}>
             <Header title={campsite.campsite_name}/>
             <TouchableOpacity style={styles.usernameButton} onPress={handleUsernamePress}>
-        <Text style={styles.buttonText}>{username}</Text>
+        <Text style={styles.buttonText}>{user}</Text>
       </TouchableOpacity>
       <AddToFavouritesButton />
       <View style={styles.imagesContainer}>
           <Images />
         </View>
         <View style={styles.sectionContainer}>
+        
           <Text style={styles.sections}>Contact Information</Text>
           <View style={styles.contactContainer}>
-            {Array.isArray(campsite.contact) && campsite.contact.map((person) => (
+            {Array.isArray(campsite.contacts) && campsite.contacts.map((person) => (
               <View key={person.campsite_contact_id} style={styles.contactItem}>
                 <Text style={styles.contactInfo}>Contact Name: {person.campsite_contact_name}</Text>
                 <Text style={styles.contactInfo}>Phone: {person.campsite_contact_phone}</Text>
@@ -63,10 +66,9 @@ const IndividualCampsiteView = () => {
           <Text style={styles.text}>Facilities: £{campsite.facilities_cost}</Text>
         </View>
         <View style={styles.reviewsContainer}>
-          <CampsiteReviews campsite_id = {campsite_id}/>
           <Text style={styles.sections}>Reviews</Text>
-          <Text style={styles.text}>This is where reviews go</Text>
-          <ReviewForm />
+         <ReviewList campsite_id={campsite_id}/>
+        
         </View>
         
         </View>

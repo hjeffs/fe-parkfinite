@@ -3,10 +3,28 @@ import Header from '../components/Header';
 import { ImageBackground } from 'react-native';
 import Button from '../components/Button';
 import { StyleSheet, View, Text, SafeAreaView } from 'react-native';
+import { UserContext } from '../utils/UserContext';
+import { useContext, useEffect } from 'react';
+import { getUsers } from '../utils/api';
+
+
 
 function HomeScreen() {
-
+    const {user, setUser} = useContext(UserContext)
     const navigation = useNavigation();
+  
+   function handleLogin () {
+    getUsers()
+    .then((data) => {
+      setUser(data)
+    })
+    navigation.navigate("SearchCampsiteView")
+   }
+
+   function handleGuest () {
+    setUser("Guest")
+    navigation.navigate("SearchCampsiteView")
+   }
    
     return (
       <SafeAreaView style={styles.container}>
@@ -14,11 +32,11 @@ function HomeScreen() {
         <ImageBackground source={require('../assets/background.png')} style={styles.background}>
           <View style={styles.buttonContainer}>
             <Button title="Sign Up" onPress={() => navigation.navigate('SignUp')} />
-            <Button title="Log In" onPress={() => navigation.navigate('LogIn')} />
+            <Button title="Log In" onPress={handleLogin} />
           </View>
           <Button
             title="Continue as guest"
-            onPress={() => navigation.navigate('SearchCampsiteView')}
+            onPress={handleGuest}
             style={styles.continueAsGuestButton}
           />
           <Text style={styles.label}>

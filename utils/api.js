@@ -44,18 +44,37 @@ export const getCampsiteByID = (campsite_id) => {
       });
 }
 
-
-
-
 export const getReviewByCampsiteID = (campsite_id) => {
-    
   return parkfiniteApi
   .get(`/campsites/${campsite_id}/reviews`)
   .then((res) => {
-    console.log(res.data)
-      return res.data
+   return res.data
   })
   .catch((error) => {
-      throw error; 
-    });
+    if (error.response) {
+      console.error('Response error:', error.response.data);
+      console.error('Response status:', error.response.status);
+      console.error('Response headers:', error.response.headers);
+    } else if (error.request) {
+      
+      console.error('Request error:', error.request);
+    } else {
+      
+      console.error('Error message:', error.message);
+    }
+    console.error('Config:', error.config);
+    throw error; 
+  });
+}
+
+export const getUsers = () => {
+  return parkfiniteApi
+  .get('/users')
+  .then((res) => {
+    return res.data[4].username
+  })
+}
+
+export const postReview = () => {
+  return parkfiniteApi
 }

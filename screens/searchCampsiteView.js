@@ -5,12 +5,14 @@ import { StyleSheet, TouchableOpacity } from "react-native";
 import { TextInput } from "react-native";
 import SearchBarInput from '../components/elements'
 import IndividualCampsiteView from "./individualCampsiteView";
+import { UserContext } from "../utils/UserContext";
+import { useContext } from 'react';
 
 
 
 const SearchCampsiteView = ({ navigation }) => {
-    const username = "Guest"; 
-  
+
+  const {user, setUser} = useContext(UserContext)
     const handleUsernamePress = () => {
       
     };
@@ -18,7 +20,7 @@ const SearchCampsiteView = ({ navigation }) => {
         <View style={styles.container}>
        <Map /> 
       <TouchableOpacity style={styles.usernameButton} onPress={handleUsernamePress}>
-        <Text style={styles.buttonText}>{username}</Text>
+        <Text style={styles.buttonText}>{user}</Text>
       </TouchableOpacity>
       <SearchBarInput />
     </View>
