@@ -15,7 +15,7 @@ const UsernameButton = ({ title, onPress }) => {
       onPress={handleUsernamePress}
     >
     <Text style={styles.buttonText}>{user.username}</Text>
-    {user.xp ? <Text style={styles.buttonText}>{user.xp} XP</Text>: null }
+    {user.username !== 'Guest' ? ( <Text style={styles.buttonText}>{user.xp} XP</Text> ) : null}
     
      </TouchableOpacity>
   );
