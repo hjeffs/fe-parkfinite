@@ -17,20 +17,20 @@ function HomeScreen() {
     getUsers()
     .then((data) => {
       setUser(data)
-      console.log(user)
+      
 
     })
     navigation.navigate("SearchCampsiteView")
    }
 
    function handleGuest () {
-    setUser("Guest")
-    navigation.navigate("SearchCampsiteView")
+   setUser({username: "Guest"})
+   navigation.navigate("SearchCampsiteView")
    }
    
     return (
       <SafeAreaView style={styles.container}>
-        <Header title="Parkfinite" />
+        {/* <Header title="Parkfinite" /> */}
         <ImageBackground source={require('../assets/background.png')} style={styles.background}>
           <View style={styles.buttonContainer}>
             <Button title="Sign Up" onPress={() => navigation.navigate('SignUp')} />
