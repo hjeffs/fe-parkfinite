@@ -20,7 +20,8 @@ const SearchCampsiteView = ({ navigation }) => {
         <View style={styles.container}>
        <Map /> 
       <TouchableOpacity style={styles.usernameButton} onPress={handleUsernamePress}>
-        <Text style={styles.buttonText}>{user}</Text>
+        <Text style={styles.buttonText}>{user.username}</Text>
+        <Text style={styles.buttonText}>{user.xp} XP</Text>
       </TouchableOpacity>
       <SearchBarInput />
     </View>
