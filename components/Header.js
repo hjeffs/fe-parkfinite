@@ -1,10 +1,15 @@
 import React from 'react';
 import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
 
-const Header = ({ title }) => {
+import UsernameButton from "../components/UsernameButton";
+
+
+const Header = ({ subtitle }) => {
     return (
         <SafeAreaView style={styles.header}>
-            <Text style={styles.headerTitle}>{title}</Text>
+            <Text style={styles.headerTitle}>{"PARKFINITE"}</Text>
+            <Text style={styles.headerSubtitle}>{subtitle}</Text>
+            <UsernameButton/>
         </SafeAreaView>
     );
 };
@@ -12,7 +17,7 @@ const Header = ({ title }) => {
 const styles = StyleSheet.create({
     header: {
         width: '100%',
-        height: 60,
+        height: 110,
         backgroundColor: 'green',
         alignItems: 'center',
         justifyContent: 'center',
@@ -20,6 +25,11 @@ const styles = StyleSheet.create({
         top: 0,
     },
     headerTitle: {
+        color: 'white',
+        fontSize: 20,
+        marginTop: 35
+    },
+    headerSubtitle: {
         color: 'white',
         fontSize: 20,
     }
