@@ -71,10 +71,29 @@ export const getUsers = () => {
   return parkfiniteApi
   .get('/users')
   .then((res) => {
-    return res.data[4].username
+    const userObject = {username: res.data[4].username, xp: res.data[4].xp }
+    return userObject
   })
 }
 
-export const postReview = () => {
+export const postReview = (campsite_id, commentData) => {
   return parkfiniteApi
+  .post(`/campsites/${campsite_id}/reviews`, {username: commentData.username, comment: commentData.comment, rating: commentData.rating})
+  .then((res) => {
+    console.log("post review successfull")
+  })
+  .catch((error) => {
+    console.log(error)
+  })
 }
+
+// export const patchUserXP = (username, xp) => {
+//   return parkfiniteApi
+//   .patch(`/users/${username}/${xp}`)
+//   .then((res) => {
+// console.log('XP updated successfully')
+//   })
+//   .catch((error) => {
+//     console.log(error)
+//   })
+// }

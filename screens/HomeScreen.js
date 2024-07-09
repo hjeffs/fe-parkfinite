@@ -17,6 +17,8 @@ function HomeScreen() {
     getUsers()
     .then((data) => {
       setUser(data)
+      console.log(user)
+
     })
     navigation.navigate("SearchCampsiteView")
    }
