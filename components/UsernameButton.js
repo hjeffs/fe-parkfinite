@@ -14,7 +14,7 @@ const UsernameButton = ({ title, onPress }) => {
       style={styles.usernameButton}
       onPress={handleUsernamePress}
     >
-      <Text style={styles.buttonText}>{user}</Text>
+      <Text style={styles.buttonText}>{user.username}</Text>
     </TouchableOpacity>
   );
 };
