@@ -39,7 +39,8 @@ const IndividualCampsiteView = () => {
         <View style={styles.container}>
             <Header title={campsite.campsite_name}/>
             <TouchableOpacity style={styles.usernameButton} onPress={handleUsernamePress}>
-        <Text style={styles.buttonText}>{user}</Text>
+        <Text style={styles.buttonText}>{user.username}</Text>
+        <Text style={styles.buttonText}>{user.xp} XP</Text>
       </TouchableOpacity>
       <AddToFavouritesButton />
       <View style={styles.imagesContainer}>

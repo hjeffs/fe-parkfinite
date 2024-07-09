@@ -14,6 +14,7 @@ const SearchCampsiteView = ({ navigation }) => {
 
   const handleUsernamePress = () => {};
 
+
   return (
     <>
       <View style={styles.container}>

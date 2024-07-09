@@ -1,34 +1,53 @@
 import { UserContext } from "../utils/UserContext";
 import { useState } from "react";
 import { useContext } from "react";
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, RNPickerSelect } from "react-native";
+import { StyleSheet, Text, View, TextInput, TouchableOpacity } from "react-native";
 import { postReview } from "../utils/api";
+import RNPickerSelect from "react-native-picker-select"
+import uuid from 'react-native-uuid'
+import { Alert } from "react-native"; 
+
 
 
 
 export const PostReview = ({setReviews, campsite_id}) => {
     const [reviewBody, setReviewBody] = useState('')
-    const [rating, setRating] = useState(0)
-    const user = useContext(UserContext)
+    const [rating, setRating] = useState(null)
+    const {user} = useContext(UserContext)
+   
     const ratings = [
         {label: "1 star", value: 1},
-        {label: "2 star", value: 2},
-        {label: "3 star", value: 3},
-        {label: "4 star", value: 4},
-        {label: "5 star", value: 5}
+        {label: "2 stars", value: 2},
+        {label: "3 stars", value: 3},
+        {label: "4 stars", value: 4},
+        {label: "5 stars", value: 5}
     ]
 
     const handleReviewInput = (input) => {
                 setReviewBody(input)
             }
-    const handleRatingInput = (ratingInput) => {
-        setRating(ratingInput)
-    }                
+    
     const handleReviewSubmit = () => {
-               const commentData = {comment: reviewBody, username: user, rating: rating}
-               setReviews((currReviews) => [commentData, ...currReviews]) 
-               postReview(campsite_id, commentData)
-            }
+        
+      if (!rating) {
+        Alert.alert(
+          "Error",
+          "Please select a rating", 
+          [
+            { text: "OK" }
+          ],
+          { cancelable: false }
+        );
+      }
+      else {
+        const commentData = {review_id: uuid.v4(), comment: reviewBody, username: user.username, rating: rating}
+        setReviews((currReviews) => [commentData, ...currReviews])
+       // patchUserXP(user.username, 25) 
+        postReview(campsite_id, commentData)
+        setRating(null)
+        setReviewBody('')
+      }  
+       }
     
     return (
         
@@ -36,7 +55,9 @@ export const PostReview = ({setReviews, campsite_id}) => {
                   
                         <Text style={styles.text}>Leave a review</Text>
 
-                         {/* <Text >Select a rating:</Text><RNPickerSelect onValueChange={(value) => setRating(value)} ratings={ratings} placeholder={{ label: "Select an option..."}} />  */}
+                         <RNPickerSelect onValueChange={(value) => setRating(value)} items={ratings} placeholder={{ label: "Select a rating...", value: null}}
+                          style={pickerSelectStyles}
+                          value={rating}  /> 
                         <TextInput style={[styles.input, styles.textArea]}
                 onChangeText={handleReviewInput}
                 value={reviewBody}
@@ -93,5 +114,31 @@ const styles = StyleSheet.create({
           text: {
             fontSize: 20,
             textAlign: 'center'
-          }
+          }   
     });
+    const pickerSelectStyles = StyleSheet.create({
+      inputIOS: {
+          fontSize: 16,
+          paddingVertical: 12,
+          paddingHorizontal: 10,
+          borderWidth: 1,
+          borderColor: '#ccc',
+          borderRadius: 5,
+          color: 'black',
+          paddingRight: 30, // to ensure the text is never behind the icon
+          backgroundColor: '#fff',
+          marginBottom: 10,
+      },
+      inputAndroid: {
+          fontSize: 16,
+          paddingVertical: 8,
+          paddingHorizontal: 10,
+          borderWidth: 0.5,
+          borderColor: '#ccc',
+          borderRadius: 5,
+          color: 'black',
+          paddingRight: 30, // to ensure the text is never behind the icon
+          backgroundColor: '#fff',
+          marginBottom: 10,
+      },
+  });
