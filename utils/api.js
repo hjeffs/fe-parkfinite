@@ -9,7 +9,7 @@ export const getCampsites = () => {
     .get('/campsites')
     .then((res) => {
          const allCampsites = res.data.map((campsite) => {
-         const object = {campsite_id: campsite.campsite_id, latitude: campsite.campsite_latitude, longitude: campsite.campsite_longitude, name: campsite.campsite_name, description: campsite.description}
+         const object = {campsite_id: campsite.campsite_id, latitude: campsite.campsite_latitude, longitude: campsite.campsite_longitude, name: campsite.campsite_name, description: campsite.description, average_rating: campsite.average_rating}
          return object
      })
     
