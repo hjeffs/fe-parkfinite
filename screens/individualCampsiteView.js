@@ -10,6 +10,7 @@ import { useState, useEffect } from "react";
 import { ReviewList } from "../components/ReviewList";
 import { UserContext } from "../utils/UserContext";
 import { useContext } from 'react';
+import UsernameButton from '../components/UsernameButton'
 
 const IndividualCampsiteView = () => {
   const {user, setUser} = useContext(UserContext)
@@ -38,10 +39,7 @@ const IndividualCampsiteView = () => {
        <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.container}>
             <Header title={campsite.campsite_name}/>
-            <TouchableOpacity style={styles.usernameButton} onPress={handleUsernamePress}>
-        <Text style={styles.buttonText}>{user.username}</Text>
-        <Text style={styles.buttonText}>{user.xp} XP</Text>
-      </TouchableOpacity>
+            <UsernameButton/>
       <AddToFavouritesButton />
       <View style={styles.imagesContainer}>
           <Images />
