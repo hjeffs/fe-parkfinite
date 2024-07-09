@@ -1,19 +1,21 @@
 import React from "react";
 import { Button, View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 
-const Images =  () => {
+const Images =  ({campsite}) => {
     return (
         <View style={styles.imageContainer}>
-<Image
-style={styles.images}
-source={require('../assets/campsiteImage1.png')}
-/>
-<Image
-style={styles.images}
-source={require('../assets/campsiteImage2.png')}
-/>
-
-</View>
+      {campsite.photos && Array.isArray(campsite.photos) ? (
+        campsite.photos.map((photo, index) => (
+          <Image
+            key={index} // Adding a key is important for lists in React
+            style={styles.images}
+            source={{ uri: photo.campsite_photo_url }}
+          />
+        ))
+      ) : (
+        <Text>No photos available</Text>
+      )}
+    </View>
 )
 }
 const styles = StyleSheet.create({images: {

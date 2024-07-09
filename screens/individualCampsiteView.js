@@ -42,7 +42,7 @@ const IndividualCampsiteView = () => {
             <UsernameButton/>
       <AddToFavouritesButton />
       <View style={styles.imagesContainer}>
-          <Images />
+          <Images campsite={campsite} />
         </View>
         <View style={styles.sectionContainer}>
         

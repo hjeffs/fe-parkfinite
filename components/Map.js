@@ -98,6 +98,8 @@ const Map = () => {
     navigation.navigate("PostCampsiteView");
   };
 
+
+
   return (
     <View style={styles.container}>
       <MapView
@@ -128,7 +130,7 @@ const Map = () => {
             }}
             name={location.name}
             description={location.description}
-            onPress={() => setSelectedCampsite(location)} // Set selected campsite on marker press
+            onPress={() => setSelectedCampsite(location)} 
           />
         ))}
         {destination && (
@@ -165,7 +167,8 @@ const Map = () => {
 
       {selectedCampsite && (
         <View style={styles.campsiteInfo}>
-          <Text style={styles.title}>{selectedCampsite.title}</Text>
+          <Text style={styles.title}>{selectedCampsite.name} </Text>
+          <Text>{selectedCampsite.average_rating}⭐ </Text>
           <Text style={styles.description}>{selectedCampsite.description}</Text>
           <Button
             title="Go to Individual Campsite"
