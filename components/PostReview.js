@@ -2,7 +2,7 @@ import { UserContext } from "../utils/UserContext";
 import { useState } from "react";
 import { useContext } from "react";
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from "react-native";
-import { postReview } from "../utils/api";
+import { patchUserXP, postReview } from "../utils/api";
 import RNPickerSelect from "react-native-picker-select"
 import uuid from 'react-native-uuid'
 import { Alert } from "react-native"; 
@@ -13,7 +13,7 @@ import { Alert } from "react-native";
 export const PostReview = ({setReviews, campsite_id}) => {
     const [reviewBody, setReviewBody] = useState('')
     const [rating, setRating] = useState(null)
-    const {user} = useContext(UserContext)
+    const {user, setUser} = useContext(UserContext)
    
     const ratings = [
         {label: "1 star", value: 1},
@@ -42,7 +42,8 @@ export const PostReview = ({setReviews, campsite_id}) => {
       else {
         const commentData = {review_id: uuid.v4(), comment: reviewBody, username: user.username, rating: rating}
         setReviews((currReviews) => [commentData, ...currReviews])
-       // patchUserXP(user.username, 25) 
+        setUser({username: user.username, xp: user.xp + 25 })
+        patchUserXP(user.username, 25) 
         postReview(campsite_id, commentData)
         setRating(null)
         setReviewBody('')
