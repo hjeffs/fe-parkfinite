@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
   usernameButton: {
     position: "absolute",
     top: 120,
-    right: 50,
+    right: 20,
     backgroundColor: "#2ECC71",
     paddingVertical: 10,
     paddingHorizontal: 20,
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "white",
-    fontSize: 14,
+    fontSize: 10,
   },
 });
 

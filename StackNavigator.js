@@ -2,8 +2,8 @@ import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { View, Text } from "react-native";
 import HomeScreen from "./screens/HomeScreen";
-import SearchCampsiteView from "./screens/searchCampsiteView";
-import IndividualCampsiteView from "./screens/individualCampsiteView";
+import SearchCampsiteView from "./screens/MapView";
+import IndividualCampsiteView from "./screens/IndividualCampsiteView";
 import PostCampsiteView from "./screens/postCampsiteView";
 
 const Stack = createNativeStackNavigator();

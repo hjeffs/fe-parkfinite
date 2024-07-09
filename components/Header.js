@@ -17,7 +17,7 @@ const Header = ({ subtitle }) => {
 const styles = StyleSheet.create({
     header: {
         width: '100%',
-        height: 110,
+        height: 100,
         backgroundColor: 'green',
         alignItems: 'center',
         justifyContent: 'center',
@@ -26,8 +26,7 @@ const styles = StyleSheet.create({
     },
     headerTitle: {
         color: 'white',
-        fontSize: 20,
-        marginTop: 35
+        fontSize: 20
     },
     headerSubtitle: {
         color: 'white',

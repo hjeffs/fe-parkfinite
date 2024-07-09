@@ -4,7 +4,7 @@ import Map from "../components/Map";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { TextInput } from "react-native";
 import SearchBarInput from "../components/elements";
-import IndividualCampsiteView from "./individualCampsiteView";
+import IndividualCampsiteView from "./IndividualCampsiteView";
 import { UserContext } from "../utils/UserContext";
 import { useContext } from "react";
 import Header from "../components/Header";

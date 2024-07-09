@@ -50,21 +50,21 @@ export const AddToFavouritesButton = () => {
 };
 const styles = StyleSheet.create({
   container: {
+    top: 110,
     alignItems: "center",
     marginVertical: 10,
   },
   searchBar: {
-    top: 120,
     position: "center",
     width: 200,
     backgroundColor: "#D3F8E2",
     borderRadius: 5,
     padding: 10,
     fontSize: 16,
+    margin: 10
   },
   favouritesButton: {
     position: "absolute",
-    top: 70,
     left: 20,
     flexDirection: "row",
     alignItems: "center",
