@@ -7,7 +7,7 @@ import {
   Text,
   Button,
 } from "react-native";
-import {Picker} from '@react-native-picker/picker'
+import { Picker } from "@react-native-picker/picker";
 import MapView, { Marker, Polyline } from "react-native-maps";
 import * as Location from "expo-location";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -15,8 +15,8 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { getCampsites, getFavourites } from "../utils/api";
 import { UserContext } from "../utils/UserContext";
+import { CustomMarkerContext } from "../utils/CustomMarkerContext";
 import { useContext } from "react";
-
 
 const Map = () => {
   const navigation = useNavigation();
@@ -25,29 +25,33 @@ const Map = () => {
   const [currentLocation, setCurrentLocation] = useState(null);
   // const [destination, setDestination] = useState(null);
   const [favourites, setFavourites] = useState([]);
-  // const [customMarker, setCustomMarker] = useState(null);
-  const [selectedCampsite, setSelectedCampsite] = useState(null); 
-  const {user, setUser} = useContext(UserContext);
+  const {customMarker, setCustomMarker} = useContext(CustomMarkerContext)
+  const [isCustomMarker, setIsCustomMarker] = useState(false);
+  const [selectedCampsite, setSelectedCampsite] = useState(null);
+  const { user, setUser } = useContext(UserContext);
   const [campsites, setCampsites] = useState([]);
-  const [selectedView, setSelectedView] = useState('all');
+  const [selectedView, setSelectedView] = useState("all");
+
+
 
   useEffect(() => {
+    console.log('custom');
+    setIsCustomMarker(true)
+  }, [customMarker])
+
+  useEffect(() => {
+    setIsCustomMarker(false)
     getCampsites().then((campsites) => {
       setCampsites(campsites);
     });
   }, []);
 
   useEffect(() => {
-    console.log(user.username, 'username')
-    getFavourites(user.username)
-    .then((data) => {
-      setFavourites(data)
-    })
-  }, [user.username])
-
-
-
-  
+    console.log(user.username, "username");
+    getFavourites(user.username).then((data) => {
+      setFavourites(data);
+    });
+  }, [user.username]);
 
   useEffect(() => {
     (async () => {
@@ -93,6 +97,7 @@ const Map = () => {
   const handleMapPress = (e) => {
     const { coordinate } = e.nativeEvent;
     setCustomMarker(coordinate);
+    console.log(customMarker);
   };
 
   const handleNavigate = async (location) => {
@@ -114,11 +119,9 @@ const Map = () => {
     navigation.navigate("PostCampsiteView");
   };
 
-
-
   return (
     <View style={{ flex: 1 }}>
-     <View style={styles.pickerContainer}>
+      <View style={styles.pickerContainer}>
         <Picker
           selectedValue={selectedView}
           onValueChange={(itemValue) => setSelectedView(itemValue)}
@@ -127,19 +130,18 @@ const Map = () => {
           <Picker.Item label="Favourites" value="favourites" />
         </Picker>
       </View>
-    <View style={styles.container}>
-      <MapView
-        style={styles.map}
-        initialRegion={{
-          latitude: 53.483959,
-          longitude: -2.244644,
-          latitudeDelta: 5.0,
-          longitudeDelta: 5.0,
-        }}
-        onPress={handleMapPress}
-      >
-
-        {/* {currentLocation && (
+      <View style={styles.container}>
+        <MapView
+          style={styles.map}
+          initialRegion={{
+            latitude: 53.483959,
+            longitude: -2.244644,
+            latitudeDelta: 5.0,
+            longitudeDelta: 5.0,
+          }}
+          onPress={handleMapPress}
+        >
+          {/* {currentLocation && (
           <Marker
             coordinate={{
               latitude: currentLocation.latitude,
@@ -148,34 +150,46 @@ const Map = () => {
             title="Current Location"
           />
         )} */}
-        {selectedView === 'all' ? (
-          campsites.map((location) => (
-            <Marker
-              key={location.campsite_id}
-              coordinate={{
-                latitude: location.latitude,
-                longitude: location.longitude,
-              }}
-              title={location.name}
-              description={location.description}
-              onPress={() => setSelectedCampsite(location)}
-            />
-          ))
-        ) : (
-          favourites.map((location) => (
-            <Marker
-              key={location.campsite_id}
-              coordinate={{
-                latitude: location.campsite_latitude,
-                longitude: location.campsite_longitude,
-              }}
-              title={location.campsite_name}
-              description={location.description}
-              onPress={() => setSelectedCampsite(location)}
-            />
-          ))
-        )}
-        {/* {destination && (
+          {selectedView === "all"
+            ? campsites.map((location) => (
+                <Marker
+                  key={location.campsite_id}
+                  coordinate={{
+                    latitude: location.latitude,
+                    longitude: location.longitude,
+                  }}
+                  title={location.name}
+                  description={location.description}
+                  onPress={() => setSelectedCampsite(location)}
+                />
+              ))
+            : favourites.map((location) => (
+                <Marker
+                  key={location.campsite_id}
+                  coordinate={{
+                    latitude: location.campsite_latitude,
+                    longitude: location.campsite_longitude,
+                  }}
+                  title={location.campsite_name}
+                  description={location.description}
+                  onPress={() => setSelectedCampsite(location)}
+                />
+              ))}
+
+          {customMarker && (
+            <>
+              <Marker
+                coordinate={{
+                  latitude: customMarker.latitude,
+                  longitude: customMarker.longitude,
+                }}
+                title={customMarker.title}
+                pinColor="blue"
+              />
+            </>
+          )}
+
+          {/* {destination && (
           <>
             <Marker
               coordinate={{
@@ -203,29 +217,31 @@ const Map = () => {
             )}
           </>
         )} */}
-      </MapView>
+        </MapView>
 
-      <Button title="Post New Campsite" onPress={() => goToPostCampsite()} />
+        {isCustomMarker && <Button title="Post New Campsite" onPress={() => goToPostCampsite()} />}
 
-      {selectedCampsite && (
-        <View style={styles.campsiteInfo}>
-          <Text style={styles.title}>{selectedCampsite.name} </Text>
-          <Text>{selectedCampsite.average_rating}⭐ </Text>
-          <Text style={styles.description}>{selectedCampsite.description}</Text>
-          <Button
-            title="Go to Individual Campsite"
-            onPress={() => goToIndividualCampsite(selectedCampsite)}
-          />
-        </View>
-      )}
-    </View>
+        {selectedCampsite && (
+          <View style={styles.campsiteInfo}>
+            <Text style={styles.title}>{selectedCampsite.name} </Text>
+            <Text>{selectedCampsite.average_rating}⭐ </Text>
+            <Text style={styles.description}>
+              {selectedCampsite.description}
+            </Text>
+            <Button
+              title="Go to Individual Campsite"
+              onPress={() => goToIndividualCampsite(selectedCampsite)}
+            />
+          </View>
+        )}
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   pickerContainer: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     padding: 10,
     zIndex: 1, // Ensure the Picker is above the MapView
   },
