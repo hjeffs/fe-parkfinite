@@ -31,7 +31,7 @@ const IndividualCampsiteView = () => {
 
   useEffect(() => {
     if (campsiteId) {
-      getCampsiteByID(999)
+      getCampsiteByID(campsiteId)
         .then((data) => {
           setCampsite(data);
         })
