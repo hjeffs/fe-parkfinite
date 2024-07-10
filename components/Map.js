@@ -26,7 +26,6 @@ const Map = () => {
   // const [destination, setDestination] = useState(null);
   const [favourites, setFavourites] = useState([]);
   const {customMarker, setCustomMarker} = useContext(CustomMarkerContext)
-  const [isCustomMarker, setIsCustomMarker] = useState(false);
   const [selectedCampsite, setSelectedCampsite] = useState(null);
   const { user, setUser } = useContext(UserContext);
   const [campsites, setCampsites] = useState([]);
@@ -35,12 +34,6 @@ const Map = () => {
 
 
   useEffect(() => {
-    console.log('custom');
-    setIsCustomMarker(true)
-  }, [customMarker])
-
-  useEffect(() => {
-    setIsCustomMarker(false)
     getCampsites().then((campsites) => {
       setCampsites(campsites);
     });
@@ -97,7 +90,6 @@ const Map = () => {
   const handleMapPress = (e) => {
     const { coordinate } = e.nativeEvent;
     setCustomMarker(coordinate);
-    console.log(customMarker);
   };
 
   const handleNavigate = async (location) => {
@@ -219,7 +211,7 @@ const Map = () => {
         )} */}
         </MapView>
 
-        {isCustomMarker && <Button title="Post New Campsite" onPress={() => goToPostCampsite()} />}
+        {customMarker && <Button title="Post New Campsite" onPress={() => goToPostCampsite()} />}
 
         {selectedCampsite && (
           <View style={styles.campsiteInfo}>
