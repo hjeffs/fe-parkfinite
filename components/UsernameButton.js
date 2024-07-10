@@ -14,8 +14,8 @@ const UsernameButton = ({ title, onPress }) => {
       style={styles.usernameButton}
       onPress={handleUsernamePress}
     >
-    <Text style={styles.buttonText}>{user.username}</Text>
-    {user.username !== 'Guest' ? ( <Text style={styles.buttonText}>{user.xp} XP</Text> ) : null}
+    <Text style={styles.buttonText}>{user.username} {user.username !== 'Guest' ? ( <Text style={styles.buttonText}>{user.xp} XP</Text> ) : null}</Text>
+   
     
      </TouchableOpacity>
   );
@@ -24,17 +24,18 @@ const UsernameButton = ({ title, onPress }) => {
 const styles = StyleSheet.create({
   usernameButton: {
     position: "absolute",
-    top: 120,
-    right: 20,
+    left: 120,
+    right:120,
     backgroundColor: "#2ECC71",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
+    paddingVertical: 3,
+    paddingHorizontal: 5,
     borderRadius: 5,
     zIndex: 10,
   },
   buttonText: {
-    color: "white",
-    fontSize: 12,
+    color: "black",
+    fontSize: 16,
+    textAlign: "center"
   },
 });
 
