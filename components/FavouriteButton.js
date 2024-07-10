@@ -29,7 +29,8 @@ export const AddToFavouritesButton = () => {
 const styles = StyleSheet.create({
   favouritesButton: {
     position: "absolute",
-    left: 20,
+    top: 220,
+    left: 50,
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#ffb6c1",
