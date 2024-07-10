@@ -5,23 +5,37 @@ import {
   Alert,
   Text,
   TouchableOpacity,
+  Button
 } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
+
 import MapView, { Marker, Polyline } from 'react-native-maps';
-import * as Location from 'expo-location';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { getCampsites, getFavourites } from '../utils/api';
-import { UserContext } from '../utils/UserContext';
 import { GOOGLE_MAPS_API_KEY } from '../utils/GoogleMapsApiKey';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import * as Location from 'expo-location';
+
+import { Picker } from '@react-native-picker/picker';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import { UserContext } from '../utils/UserContext';
+import { CustomMarkerContext } from "../utils/CustomMarkerContext";
+import { useContext } from "react";
+
+import { FontAwesome } from "@expo/vector-icons";
+
+import { getCampsites, getFavourites } from '../utils/api';
+
 
 const Map = () => {
   const navigation = useNavigation();
   const route = useRoute();
+
+  const { user } = useContext(UserContext);
+  const {customMarker, setCustomMarker} = useContext(CustomMarkerContext)
+  
   const [currentLocation, setCurrentLocation] = useState(null);
   const [favourites, setFavourites] = useState([]);
   const [selectedCampsite, setSelectedCampsite] = useState(null);
-  const { user } = useContext(UserContext);
   const [campsites, setCampsites] = useState([]);
   const [selectedView, setSelectedView] = useState('all');
   const [region, setRegion] = useState({
@@ -35,7 +49,7 @@ const Map = () => {
     getCampsites().then((campsites) => {
       setCampsites(campsites);
     });
-  }, []);
+  }, [customMarker]);
 
   useEffect(() => {
     getFavourites(user.username).then((data) => {
@@ -132,6 +146,17 @@ const Map = () => {
         region={region}
         onPress={handleMapPress}
       >
+
+      {/* {currentLocation && (
+        <Marker
+          coordinate={{
+            latitude: currentLocation.latitude,
+            longitude: currentLocation.longitude,
+          }}
+          title="Current Location"
+        />
+      )} */}
+
         {selectedView === 'all' ? (
           campsites.map((location) => (
             <Marker
@@ -159,10 +184,54 @@ const Map = () => {
             />
           ))
         )}
+
+        {customMarker && (
+          <>
+            <Marker
+              coordinate={{
+                latitude: customMarker.latitude,
+                longitude: customMarker.longitude,
+              }}
+              title={customMarker.title}
+              pinColor="blue"
+            />
+          </>
+        )}
+
+        {/* {destination && (
+        <>
+          <Marker
+            coordinate={{
+              latitude: destination.latitude,
+              longitude: destination.longitude,
+            }}
+            title={destination.title}
+            pinColor="green"
+          />
+          {currentLocation && (
+            <Polyline
+              coordinates={[
+                {
+                  latitude: currentLocation.latitude,
+                  longitude: currentLocation.longitude,
+                },
+                {
+                  latitude: destination.latitude,
+                  longitude: destination.longitude,
+                },
+              ]}
+              strokeColor="#3498DB"
+              strokeWidth={3}
+            />
+          )}
+        </>
+      )} */}
       </MapView>
-      <TouchableOpacity style={styles.postButton} onPress={goToPostCampsite}>
-        <Text style={styles.postButtonText}>Post New Campsite</Text>
-      </TouchableOpacity>
+
+
+      {customMarker && <Button title="Post New Campsite" onPress={() => goToPostCampsite()} />}
+
+
       {selectedCampsite && (
         <View style={styles.campsiteInfo}>
           <Text style={styles.title}>{selectedCampsite.name} </Text>
@@ -179,6 +248,7 @@ const Map = () => {
 };
 
 const styles = StyleSheet.create({
+
   pickerAndSearchContainer: {
     marginTop: 80,
     flexDirection: 'row',
@@ -189,7 +259,7 @@ const styles = StyleSheet.create({
     paddingVertical: 1,
   },
   picker: {
-    flex: 0.6, // Adjusted flex value for larger size
+    flex: 0.6,
     height: 40,
   },
   container: {
