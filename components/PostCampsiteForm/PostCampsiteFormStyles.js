@@ -58,6 +58,7 @@ export const formStyles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 10,
     marginBottom: 10,
+    borderRadius: 10
   },
   rowContainer: {
     flexDirection: "row",
