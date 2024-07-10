@@ -13,8 +13,10 @@ import CostInputs from "../components/PostCampsiteForm/CostInputs";
 import Button from "../components/Button";
 
 import { postCampsite } from "../utils/api";
+import { useNavigation } from "@react-navigation/native";
 
 const PostCampsiteView = () => {
+  const navigation = useNavigation()
   const { user } = useContext(UserContext);
   const {customMarker, setCustomMarker} = useContext(CustomMarkerContext)
   const [newCampsite, setNewCampsite] = useState({
@@ -45,13 +47,13 @@ const PostCampsiteView = () => {
       campsite_longitude: customMarker["longitude"],
       photos: [{ campsite_photo_url: "https://picsum.photos/150/150" }],
     };
-
     postCampsite(campsiteToSubmit)
       .then(() => {
         setNewCampsite({
           contacts: []
         });
         setCustomMarker()
+        navigation.navigate("SearchCampsiteView")
       })
       .catch((err) => {
         setNewCampsite({

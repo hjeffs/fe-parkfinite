@@ -37,7 +37,7 @@ const Map = () => {
     getCampsites().then((campsites) => {
       setCampsites(campsites);
     });
-  }, []);
+  }, [customMarker]);
 
   useEffect(() => {
     console.log(user.username, "username");
