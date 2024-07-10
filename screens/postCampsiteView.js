@@ -8,12 +8,14 @@ import Header from "../components/Header";
 import { formStyles } from "../components/PostCampsiteForm/PostCampsiteFormStyles";
 import MonthPicker from "../components/PostCampsiteForm/MonthPicker";
 import ContactForm from "../components/PostCampsiteForm/ContactForm";
+import ContactList from "../components/PostCampsiteForm/ContactList";
 import CategoryPicker from "../components/PostCampsiteForm/CategoryPicker";
 import CostInputs from "../components/PostCampsiteForm/CostInputs";
 import Button from "../components/Button";
 
 import { postCampsite } from "../utils/api";
 import { useNavigation } from "@react-navigation/native";
+import UsernameButton from "../components/UsernameButton";
 
 const PostCampsiteView = () => {
   const navigation = useNavigation()
@@ -63,6 +65,8 @@ const PostCampsiteView = () => {
   };
 
   return (
+    <>
+    <UsernameButton/>
     <ScrollView
       style={styles.scrollView}
       contentContainerStyle={styles.scrollViewContent}
@@ -86,7 +90,7 @@ const PostCampsiteView = () => {
           placeholder="Insert description..."
           placeholderTextColor="111"
           multiline
-          style={[styles.input, styles.textArea]}
+          style={[formStyles.input, styles.textArea]}
         />
         <CategoryPicker
           categoryId={newCampsite.category_id}
@@ -105,6 +109,7 @@ const PostCampsiteView = () => {
           handleMonthChange={handleChange}
         />
         <ContactForm addContact={addContact} />
+        <ContactList contacts={newCampsite.contacts}/>
       </View>
       <Button
         title="Submit New Campsite!"
@@ -113,6 +118,7 @@ const PostCampsiteView = () => {
         }}
       />
     </ScrollView>
+    </>
   );
 };
 
