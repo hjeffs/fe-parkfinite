@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, ScrollView, TextInput } from "react-native";
 
 import React, { useContext, useState } from "react";
 import { UserContext } from "../utils/UserContext";
+import { CustomMarkerContext } from "../utils/CustomMarkerContext";
 
 import Header from "../components/Header";
 import { formStyles } from "../components/PostCampsiteForm/PostCampsiteFormStyles";
@@ -12,14 +13,18 @@ import CostInputs from "../components/PostCampsiteForm/CostInputs";
 import Button from "../components/Button";
 
 import { postCampsite } from "../utils/api";
+import { useNavigation } from "@react-navigation/native";
 
 const PostCampsiteView = () => {
+  const navigation = useNavigation()
   const { user } = useContext(UserContext);
+  const {customMarker, setCustomMarker} = useContext(CustomMarkerContext)
   const [newCampsite, setNewCampsite] = useState({
     contacts: []
   });
 
   const handleChange = (name, value) => {
+
     setNewCampsite((prev) => {
       const updated = { ...prev, [name]: value };
       return updated;
@@ -38,16 +43,17 @@ const PostCampsiteView = () => {
     const campsiteToSubmit = {
       ...newCampsite,
       added_by: user.username,
-      campsite_latitude: 1.78,
-      campsite_longitude: 54.321,
+      campsite_latitude: customMarker["latitude"],
+      campsite_longitude: customMarker["longitude"],
       photos: [{ campsite_photo_url: "https://picsum.photos/150/150" }],
     };
-
     postCampsite(campsiteToSubmit)
       .then(() => {
         setNewCampsite({
           contacts: []
         });
+        setCustomMarker()
+        navigation.navigate("SearchCampsiteView")
       })
       .catch((err) => {
         setNewCampsite({
@@ -101,7 +107,7 @@ const PostCampsiteView = () => {
         <ContactForm addContact={addContact} />
       </View>
       <Button
-        text="Submit New Campsite!"
+        title="Submit New Campsite!"
         onPress={() => {
           handleSubmitCampsite(newCampsite);
         }}
