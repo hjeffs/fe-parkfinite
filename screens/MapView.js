@@ -8,6 +8,7 @@ import IndividualCampsiteView from "./IndividualCampsiteView";
 import { UserContext } from "../utils/UserContext";
 import { useContext } from "react";
 import Header from "../components/Header";
+import UsernameButton from "../components/UsernameButton";
 
 const SearchCampsiteView = ({ navigation }) => {
   const { user, setUser } = useContext(UserContext);
@@ -19,36 +20,17 @@ const SearchCampsiteView = ({ navigation }) => {
     <>
       <View style={styles.container}>
         <Map />
-        <Header subtitle={"Post a new campsite "}></Header>
-        {/* <SearchBarInput /> */}
+        <Header subtitle={"The world is yours to explore... "}></Header>
+        <UsernameButton/>
       </View>
     </>
   );
 };
 const styles = StyleSheet.create({
   container: {
+    paddingTop:20,
     justifyContent: "flex",
     flex: 1,
-  },
-  usernameButton: {
-    position: "absolute",
-    top: 20,
-    right: 20,
-    backgroundColor: "#2ECC71",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    zIndex: 10,
-  },
-  continueButton: {
-    position: "absolute",
-    top: 20,
-    left: 20,
-    backgroundColor: "#3498DB",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    zIndex: 10,
   },
   buttonText: {
     color: "#FFFFFF",
