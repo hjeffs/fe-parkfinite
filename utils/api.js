@@ -119,11 +119,20 @@ export const postReview = (campsite_id, commentData) => {
 
 export const patchUserXP = (username, xp) => {
   return parkfiniteApi
-    .patch(`/users/${username}/${xp}`)
-    .then((res) => {
-      console.log("XP updated successfully");
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-};
+  .patch(`/users/${username}/${xp}`)
+  .then((res) => {
+console.log('XP updated successfully')
+  })
+  .catch((error) => {
+    console.log(error)
+  })
+}
+
+export const getFavourites = (username) => {
+  return parkfiniteApi.get(`/users/${username}/favourites`).then((res) => {
+    return res.data
+  })
+  .catch((error) => {
+    console.log(error)
+  })
+}
