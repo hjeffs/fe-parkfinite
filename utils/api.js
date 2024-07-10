@@ -97,3 +97,12 @@ console.log('XP updated successfully')
     console.log(error)
   })
 }
+
+export const getFavourites = (username) => {
+  return parkfiniteApi.get(`/users/${username}/favourites`).then((res) => {
+    return res.data
+  })
+  .catch((error) => {
+    console.log(error)
+  })
+}
