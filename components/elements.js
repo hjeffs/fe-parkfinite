@@ -9,29 +9,7 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 
-const SearchBarInput = () => {
-  const [searchInput, setSearchInput] = useState("");
 
-  const handleInputChange = (input) => {
-    setSearchInput(input);
-  };
-
-  const handleSubmit = () => {
-    console.log("Search in progress");
-  };
-
-  return (
-    <View style={styles.container}>
-      <TextInput
-        style={styles.searchBar}
-        onChangeText={handleInputChange}
-        value={searchInput}
-        placeholder="Search Campsites..."
-      />
-      <Button title="Submit" onPress={handleSubmit} />
-    </View>
-  );
-};
 
 export const AddToFavouritesButton = () => {
   const handleAddToFavouritesPress = () => {
@@ -49,20 +27,6 @@ export const AddToFavouritesButton = () => {
   );
 };
 const styles = StyleSheet.create({
-  container: {
-    top: 110,
-    alignItems: "center",
-    marginVertical: 10,
-  },
-  searchBar: {
-    position: "center",
-    width: 200,
-    backgroundColor: "#D3F8E2",
-    borderRadius: 5,
-    padding: 10,
-    fontSize: 16,
-    margin: 10
-  },
   favouritesButton: {
     position: "absolute",
     left: 20,
@@ -79,6 +43,8 @@ const styles = StyleSheet.create({
   icon: {
     marginRight: 5,
   },
-});
 
-export default SearchBarInput;
+})
+
+
+

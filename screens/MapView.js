@@ -3,7 +3,7 @@ import { Button, View, Text, SafeAreaView } from "react-native";
 import Map from "../components/Map";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { TextInput } from "react-native";
-import SearchBarInput from "../components/elements";
+import SearchBarInput from "../components/SearchBarInput";
 import IndividualCampsiteView from "./IndividualCampsiteView";
 import { UserContext } from "../utils/UserContext";
 import { useContext } from "react";
@@ -20,7 +20,7 @@ const SearchCampsiteView = ({ navigation }) => {
       <View style={styles.container}>
         <Map />
         <Header subtitle={"Post a new campsite "}></Header>
-        <SearchBarInput />
+        {/* <SearchBarInput /> */}
       </View>
     </>
   );
