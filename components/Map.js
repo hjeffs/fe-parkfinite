@@ -7,12 +7,15 @@ import {
   Text,
   Button,
 } from "react-native";
+import {Picker} from '@react-native-picker/picker'
 import MapView, { Marker, Polyline } from "react-native-maps";
 import * as Location from "expo-location";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FontAwesome } from "@expo/vector-icons";
-import { useNavigation, useRoute } from "@react-navigation/native"; // Import useNavigation for navigation
-import { getCampsites } from "../utils/api";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { getCampsites, getFavourites } from "../utils/api";
+import { UserContext } from "../utils/UserContext";
+import { useContext } from "react";
 
 
 const Map = () => {
@@ -20,18 +23,31 @@ const Map = () => {
   const route = useRoute();
 
   const [currentLocation, setCurrentLocation] = useState(null);
-  const [destination, setDestination] = useState(null);
-  const [favorites, setFavorites] = useState([]);
-  const [customMarker, setCustomMarker] = useState(null);
-  const [selectedCampsite, setSelectedCampsite] = useState(null); // State for selected campsite
-
+  // const [destination, setDestination] = useState(null);
+  const [favourites, setFavourites] = useState([]);
+  // const [customMarker, setCustomMarker] = useState(null);
+  const [selectedCampsite, setSelectedCampsite] = useState(null); 
+  const {user, setUser} = useContext(UserContext);
   const [campsites, setCampsites] = useState([]);
+  const [selectedView, setSelectedView] = useState('all');
 
   useEffect(() => {
     getCampsites().then((campsites) => {
       setCampsites(campsites);
     });
   }, []);
+
+  useEffect(() => {
+    console.log(user.username, 'username')
+    getFavourites(user.username)
+    .then((data) => {
+      setFavourites(data)
+    })
+  }, [user.username])
+
+
+
+  
 
   useEffect(() => {
     (async () => {
@@ -48,31 +64,31 @@ const Map = () => {
       setCurrentLocation(location.coords);
     })();
 
-    loadFavorites();
+    // loadFavorites();
   }, []);
 
-  const loadFavorites = async () => {
-    try {
-      const jsonValue = await AsyncStorage.getItem("@favorites");
-      if (jsonValue !== null) {
-        setFavorites(JSON.parse(jsonValue));
-      }
-    } catch (error) {
-      console.error("Error loading favorites:", error);
-    }
-  };
+  // const loadFavorites = async () => {
+  //   try {
+  //     const jsonValue = await AsyncStorage.getItem("@favorites");
+  //     if (jsonValue !== null) {
+  //       setFavorites(JSON.parse(jsonValue));
+  //     }
+  //   } catch (error) {
+  //     console.error("Error loading favorites:", error);
+  //   }
+  // };
 
-  const saveFavorite = async (location) => {
-    try {
-      const newFavorites = [...favorites, location];
-      setFavorites(newFavorites);
-      await AsyncStorage.setItem("@favorites", JSON.stringify(newFavorites));
-      Alert.alert("Saved!", "Campsite added to favorites.");
-    } catch (error) {
-      console.error("Error saving favorite:", error);
-      Alert.alert("Error", "Failed to save campsite to favorites.");
-    }
-  };
+  // const saveFavorite = async (location) => {
+  //   try {
+  //     const newFavorites = [...favorites, location];
+  //     setFavorites(newFavorites);
+  //     await AsyncStorage.setItem("@favorites", JSON.stringify(newFavorites));
+  //     Alert.alert("Saved!", "Campsite added to favorites.");
+  //   } catch (error) {
+  //     console.error("Error saving favorite:", error);
+  //     Alert.alert("Error", "Failed to save campsite to favorites.");
+  //   }
+  // };
 
   const handleMapPress = (e) => {
     const { coordinate } = e.nativeEvent;
@@ -101,6 +117,16 @@ const Map = () => {
 
 
   return (
+    <View style={{ flex: 1 }}>
+     <View style={styles.pickerContainer}>
+        <Picker
+          selectedValue={selectedView}
+          onValueChange={(itemValue) => setSelectedView(itemValue)}
+        >
+          <Picker.Item label="All Campsites" value="all" />
+          <Picker.Item label="Favourites" value="favourites" />
+        </Picker>
+      </View>
     <View style={styles.container}>
       <MapView
         style={styles.map}
@@ -112,7 +138,8 @@ const Map = () => {
         }}
         onPress={handleMapPress}
       >
-        {currentLocation && (
+
+        {/* {currentLocation && (
           <Marker
             coordinate={{
               latitude: currentLocation.latitude,
@@ -120,20 +147,35 @@ const Map = () => {
             }}
             title="Current Location"
           />
+        )} */}
+        {selectedView === 'all' ? (
+          campsites.map((location) => (
+            <Marker
+              key={location.campsite_id}
+              coordinate={{
+                latitude: location.latitude,
+                longitude: location.longitude,
+              }}
+              title={location.name}
+              description={location.description}
+              onPress={() => setSelectedCampsite(location)}
+            />
+          ))
+        ) : (
+          favourites.map((location) => (
+            <Marker
+              key={location.campsite_id}
+              coordinate={{
+                latitude: location.campsite_latitude,
+                longitude: location.campsite_longitude,
+              }}
+              title={location.campsite_name}
+              description={location.description}
+              onPress={() => setSelectedCampsite(location)}
+            />
+          ))
         )}
-        {campsites.map((location) => (
-          <Marker
-            key={location.campsite_id}
-            coordinate={{
-              latitude: location.latitude,
-              longitude: location.longitude,
-            }}
-            name={location.name}
-            description={location.description}
-            onPress={() => setSelectedCampsite(location)} 
-          />
-        ))}
-        {destination && (
+        {/* {destination && (
           <>
             <Marker
               coordinate={{
@@ -160,7 +202,7 @@ const Map = () => {
               />
             )}
           </>
-        )}
+        )} */}
       </MapView>
 
       <Button title="Post New Campsite" onPress={() => goToPostCampsite()} />
@@ -177,10 +219,16 @@ const Map = () => {
         </View>
       )}
     </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  pickerContainer: {
+    backgroundColor: 'white',
+    padding: 10,
+    zIndex: 1, // Ensure the Picker is above the MapView
+  },
   container: {
     ...StyleSheet.absoluteFillObject,
     justifyContent: "flex-end",
