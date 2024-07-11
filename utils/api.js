@@ -33,15 +33,15 @@ export const getCampsites = () => {
     .get("/campsites")
     .then((res) => {
       const allCampsites = res.data.map((campsite) => {
-        return object = {
+        return (object = {
           campsite_id: campsite.campsite_id,
           latitude: campsite.campsite_latitude,
           longitude: campsite.campsite_longitude,
           name: campsite.campsite_name,
           description: campsite.description,
           average_rating: campsite.average_rating,
-          category: campsite.category.category_name
-        };
+          category: campsite.category.category_name,
+        });
       });
       return allCampsites;
     })
@@ -99,6 +99,14 @@ export const getUsers = () => {
   });
 };
 
+export const getUserbyUsername = () => {
+  const username = "VigorousCamel"
+  return parkfiniteApi.get(`/users/${username}`).then((res) => {
+    const user = res.data
+    return user;
+  });
+};
+
 export const postReview = (campsite_id, commentData) => {
   return parkfiniteApi
     .post(`/campsites/${campsite_id}/reviews`, {
@@ -116,20 +124,38 @@ export const postReview = (campsite_id, commentData) => {
 
 export const patchUserXP = (username, xp) => {
   return parkfiniteApi
-  .patch(`/users/${username}/${xp}`)
-  .then((res) => {
-console.log('XP updated successfully')
-  })
-  .catch((error) => {
-    console.log(error)
-  })
-}
+    .patch(`/users/${username}/${xp}`)
+    .then((res) => {
+      console.log("XP updated successfully");
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
 
 export const getFavourites = (username) => {
-  return parkfiniteApi.get(`/users/${username}/favourites`).then((res) => {
-    return res.data
-  })
-  .catch((error) => {
-    console.log(error)
-  })
-}
+  return parkfiniteApi
+    .get(`/users/${username}/favourites`)
+    .then((res) => {
+      return res.data;
+    })
+    .catch((error) => {
+    });
+};
+
+export const postFavourite = (username, campsiteId) => {
+  return parkfiniteApi
+    .post(`/users/${username}/favourites/${campsiteId}`)
+    .catch((error) => {
+      throw error;
+    });
+};
+
+
+export const deleteFavourite = (username, campsiteId) => {
+  return parkfiniteApi
+    .delete(`/users/${username}/favourites/${campsiteId}`)
+    .catch((error) => {
+      throw error;
+    });
+};

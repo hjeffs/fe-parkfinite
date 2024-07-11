@@ -11,12 +11,14 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { getUserbyUsername, postFavourite } from "../utils/api";
 import { UserContext } from "../utils/UserContext";
 import { useContext } from "react";
+import { deleteFavourite } from "../utils/api";
 
-export const AddToFavouritesButton = ({campsiteId}) => {
+export const FavouriteDeleteButton = ({campsiteId, setSelectedCampsite}) => {
   const { user, setUser } = useContext(UserContext);
 
-  const handleAddToFavouritesPress = () => {
-    postFavourite(user.username, campsiteId);
+  const handleDeleteFavouritePress = () => {
+    setSelectedCampsite(null)
+    deleteFavourite(user.username, campsiteId);
     getUserbyUsername().then(user => {
       setUser(user)
     })
@@ -25,10 +27,10 @@ export const AddToFavouritesButton = ({campsiteId}) => {
   return (
     <TouchableOpacity
       style={styles.favouritesButton}
-      onPress={handleAddToFavouritesPress}
+      onPress={handleDeleteFavouritePress}
     >
       <Icon name="heart" size={15} color="#b22222" style={styles.icon} />
-      <Text style={styles.buttonText}>ADD TO FAVOURITES</Text>
+      <Text style={styles.buttonText}>DELETE FAVOURITE</Text>
     </TouchableOpacity>
   );
 };

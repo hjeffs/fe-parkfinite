@@ -19,8 +19,11 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from "../utils/UserContext";
 import { CustomMarkerContext } from "../utils/CustomMarkerContext";
-
+import { formStyles } from "./PostCampsiteForm/PostCampsiteFormStyles";
+import { AddToFavouritesButton } from "./FavouriteButton";
+import { FavouriteDeleteButton } from "./FavouriteDelete";
 import { getCampsites, getFavourites } from "../utils/api";
+
 
 const Map = () => {
   const navigation = useNavigation();
@@ -49,7 +52,7 @@ const Map = () => {
     getFavourites(user.username).then((data) => {
       setFavourites(data);
     });
-  }, [user.username]);
+  }, [user]);
 
   useEffect(() => {
     setCustomMarker(null);
@@ -101,8 +104,6 @@ const Map = () => {
   const goToPostCampsite = () => {
     navigation.navigate("PostCampsiteView");
   };
-
-  const origin = { latitude: 53.483959, longitude: -2.244644 };
 
   return (
     <View style={{ flex: 1 }}>
@@ -168,6 +169,7 @@ const Map = () => {
                 title={location.name}
                 description={location.category}
                 onPress={() => setSelectedCampsite(location)}
+                pinColor="pink"
               />
             ))
           : favourites.map((location) => (
@@ -177,9 +179,10 @@ const Map = () => {
                   latitude: location.campsite_latitude,
                   longitude: location.campsite_longitude,
                 }}
-                title={location.campsite_name}
-                description={location.description}
+                title={location.name}
+                description={location.category}
                 onPress={() => setSelectedCampsite(location)}
+                pinColor="yellow"
               />
             ))}
 
@@ -213,22 +216,48 @@ const Map = () => {
           strokeColor="#3498DB"
           strokeWidth={3}
         />
-
-
-
       </MapView>
       {selectedCampsite && (
         <View style={styles.campsiteInfo}>
+           <View style={formStyles.rowContainer}>
+
+          {user.favourites.every(fav => selectedCampsite.campsite_id !== fav.campsite_id)
+           ?
+          (
+            <AddToFavouritesButton campsiteId={selectedCampsite.campsite_id}/>
+          )
+          :
+          (
+            <FavouriteDeleteButton campsiteId={selectedCampsite.campsite_id} setSelectedCampsite={setSelectedCampsite}/>
+          )}
+          </View>
           <Text style={styles.title}>{selectedCampsite.name} </Text>
           {selectedCampsite.average_rating && (
             <Text>{selectedCampsite.average_rating.toFixed(1)}⭐ </Text>
           )}
           <Text style={styles.description}>{selectedCampsite.description}</Text>
           {user.username !== "Guest" ? (
-            <Button
-              title="Go to Individual Campsite"
-              onPress={() => goToIndividualCampsite(selectedCampsite)}
-            />
+            <>
+              <View style={formStyles.rowContainer}>
+                <View style={formStyles.halfInputContainer}>
+                  <Button
+                    title="Go to Individual Campsite"
+                    onPress={() => goToIndividualCampsite(selectedCampsite)}
+                  />
+                </View>
+                <View style={formStyles.halfInputContainer}>
+                  <Button
+                    title="Navigate Here"
+                    onPress={() => {
+                      setDestination({
+                        latitude: selectedCampsite.latitude,
+                        longitude: selectedCampsite.longitude,
+                      });
+                    }}
+                  />
+                </View>
+              </View>
+            </>
           ) : (
             <>
               <Button
