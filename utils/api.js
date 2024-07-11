@@ -37,7 +37,7 @@ export const getCampsites = () => {
           campsite_id: campsite.campsite_id,
           latitude: campsite.campsite_latitude,
           longitude: campsite.campsite_longitude,
-          name: campsite.campsite_name,
+          campsite_name: campsite.campsite_name,
           description: campsite.description,
           average_rating: campsite.average_rating,
           category: campsite.category.category_name,
