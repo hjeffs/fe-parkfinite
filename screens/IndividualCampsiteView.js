@@ -57,7 +57,6 @@ const navigation = useNavigation()
         contentContainerStyle={styles.scrollViewContent}
       >
         <Header subtitle={campsite.campsite_name} />
-        <Button title="Back to Map" onPress={() =>navigation.navigate("SearchCampsiteView")}/>
 
         <View style={styles.imagesContainer}>
           <Images campsite={campsite} />
