@@ -80,9 +80,9 @@ const IndividualCampsiteView = () => {
                   </Text>
                   <Text style={styles.contactInfo}>
                     Email: {person.campsite_contact_email || "N/A"}
-                  </Text>
-                <Text style={styles.contactItem}>{getStars(campsite.average_rating)}</Text>
-                <Text style={styles.contactItem}>Average Rating: {campsite.average_rating.toFixed(1)}</Text>
+              </Text>
+            <Text style={styles.contactItem}>{getStars(campsite.average_rating)}</Text>
+            <Text style={styles.contactItem}>Average Rating: {campsite.campsite_avergae_rating && campsite.average_rating.toFixed(1)}</Text>
                 </View>
               ))}
           </View>

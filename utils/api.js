@@ -40,6 +40,7 @@ export const getCampsites = () => {
           name: campsite.campsite_name,
           description: campsite.description,
           average_rating: campsite.average_rating,
+          category: campsite.category.category_name
         };
       });
       return allCampsites;
