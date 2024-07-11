@@ -5,7 +5,7 @@ import Button from '../components/Button';
 import { StyleSheet, View, Text, SafeAreaView } from 'react-native';
 import { UserContext } from '../utils/UserContext';
 import { useContext, useEffect } from 'react';
-import { getUsers } from '../utils/api';
+import { getUsers, getUserbyUsername } from '../utils/api';
 
 
 
@@ -14,11 +14,10 @@ function HomeScreen() {
     const navigation = useNavigation();
   
    function handleLogin () {
-    getUsers()
-    .then((data) => {
-      setUser(data)
-      
-
+    getUserbyUsername()
+    .then((user) => {
+      console.log(user);
+      setUser(user)
     })
     navigation.navigate("SearchCampsiteView")
    }
