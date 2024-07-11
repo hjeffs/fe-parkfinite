@@ -24,7 +24,6 @@ import { AddToFavouritesButton } from "./FavouriteButton";
 import { FavouriteDeleteButton } from "./FavouriteDelete";
 import { getCampsites, getFavourites } from "../utils/api";
 
-
 const Map = () => {
   const navigation = useNavigation();
   const route = useRoute();
@@ -49,9 +48,13 @@ const Map = () => {
   });
 
   useEffect(() => {
-    getFavourites(user.username).then((data) => {
-      setFavourites(data);
-    });
+    if ((user.username === "Guest")) {
+      setFavourites([])
+    } else {
+      getFavourites(user.username).then((data) => {
+        setFavourites(data);
+      });
+    }
   }, [user]);
 
   useEffect(() => {
@@ -169,7 +172,7 @@ const Map = () => {
                 title={location.name}
                 description={location.category}
                 onPress={() => setSelectedCampsite(location)}
-                pinColor="pink"
+                pinColor="yellow"
               />
             ))
           : favourites.map((location) => (
@@ -194,7 +197,7 @@ const Map = () => {
                 longitude: customMarker.longitude,
               }}
               title={customMarker.title}
-              pinColor="blue"
+              pinColor="green"
             />
           </>
         )}
@@ -206,7 +209,7 @@ const Map = () => {
               longitude: currentLocation.longitude,
             }}
             title="Current Location"
-            pinColor="green"
+            pinColor="blue"
           />
         )}
         <MapViewDirections
@@ -219,19 +222,22 @@ const Map = () => {
       </MapView>
       {selectedCampsite && (
         <View style={styles.campsiteInfo}>
-           <View style={formStyles.rowContainer}>
-
-          {user.favourites.every(fav => selectedCampsite.campsite_id !== fav.campsite_id)
-           ?
-          (
-            <AddToFavouritesButton campsiteId={selectedCampsite.campsite_id}/>
-          )
-          :
-          (
-            <FavouriteDeleteButton campsiteId={selectedCampsite.campsite_id} setSelectedCampsite={setSelectedCampsite}/>
-          )}
+        <Text style={styles.title}>{selectedCampsite.campsite_name}</Text>
+          <View style={formStyles.rowContainer}>
+            {user.favourites &&
+            user.favourites.every(
+              (fav) => selectedCampsite.campsite_id !== fav.campsite_id
+            ) ? (
+              user.username !== "Guest" && (<AddToFavouritesButton
+                campsiteId={selectedCampsite.campsite_id}
+              />)
+            ) : (
+              <FavouriteDeleteButton
+                campsiteId={selectedCampsite.campsite_id}
+                setSelectedCampsite={setSelectedCampsite}
+              />
+            )}
           </View>
-          <Text style={styles.title}>{selectedCampsite.name} </Text>
           {selectedCampsite.average_rating && (
             <Text>{selectedCampsite.average_rating.toFixed(1)}⭐ </Text>
           )}
