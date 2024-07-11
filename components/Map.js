@@ -172,7 +172,7 @@ const Map = () => {
                 title={location.name}
                 description={location.category}
                 onPress={() => setSelectedCampsite(location)}
-                pinColor="yellow"
+                pinColor="ywllow"
               />
             ))
           : favourites.map((location) => (
@@ -185,7 +185,7 @@ const Map = () => {
                 title={location.name}
                 description={location.category}
                 onPress={() => setSelectedCampsite(location)}
-                pinColor="yellow"
+                pinColor="pink"
               />
             ))}
 

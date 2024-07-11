@@ -38,12 +38,12 @@ const navigation = useNavigation()
   useEffect(() => {
     if (campsiteId) {
       getCampsiteByID(campsiteId)
-        .then((data) => {
-          setCampsite(data);
-        })
-        .catch((err) => {
-          alert("Couldn't find campsite, please try reloading");
-        });
+      .then((data) => {
+        setCampsite(data);
+      })
+      .catch((err) => {
+        alert("Couldn't find campsite, please try reloading");
+      });
     }
   }, [campsiteId]);
 
@@ -84,10 +84,10 @@ const navigation = useNavigation()
                   <Text style={styles.contactInfo}>
                     Email: {person.campsite_contact_email || "N/A"}
               </Text>
-            <Text style={styles.contactItem}>{getStars(campsite.average_rating)}</Text>
-            <Text style={styles.contactItem}>Average Rating: {campsite.campsite_avergae_rating && campsite.average_rating.toFixed(1)}</Text>
                 </View>
               ))}
+              <Text style={styles.contactItem}>{getStars(campsite.average_rating)}</Text>
+              <Text style={styles.contactItem}>Average Rating: {campsite.average_rating && campsite.average_rating.toFixed(1)}</Text>
           </View>
           {campsite.category && (
             <>
