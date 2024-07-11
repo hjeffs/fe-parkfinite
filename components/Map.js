@@ -11,6 +11,7 @@ import MapView, { Marker, Polyline } from "react-native-maps";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { GOOGLE_MAPS_API_KEY } from "../utils/GoogleMapsApiKey";
 import * as Location from "expo-location";
+import MapViewDirections from "react-native-maps-directions";
 
 import { Picker } from "@react-native-picker/picker";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -27,9 +28,12 @@ const Map = () => {
 
   const { user } = useContext(UserContext);
   const { customMarker, setCustomMarker } = useContext(CustomMarkerContext);
-  
-  const [destination, setDestination] = useState(null)
-  const [currentLocation, setCurrentLocation] = useState(null);
+
+  const [destination, setDestination] = useState(null);
+  const [currentLocation, setCurrentLocation] = useState({
+    latitude: 53.3811,
+    longitude: -1.4701,
+  });
   const [selectedCampsite, setSelectedCampsite] = useState(null);
   const [campsites, setCampsites] = useState([]);
   const [favourites, setFavourites] = useState([]);
@@ -48,10 +52,11 @@ const Map = () => {
   }, [user.username]);
 
   useEffect(() => {
+    setCustomMarker(null);
     getCampsites().then((campsites) => {
       setCampsites(campsites);
     });
-  }, [customMarker]);
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -70,7 +75,10 @@ const Map = () => {
 
   const handleMapPress = (e) => {
     const { coordinate } = e.nativeEvent;
-    setCustomMarker(coordinate);
+    if (user.username !== "Guest") {
+      setCustomMarker(coordinate);
+      setDestination(coordinate);
+    }
   };
 
   const handleNavigate = async (location) => {
@@ -94,17 +102,21 @@ const Map = () => {
     navigation.navigate("PostCampsiteView");
   };
 
+  const origin = { latitude: 53.483959, longitude: -2.244644 };
+
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.pickerAndSearchContainer}>
-        <Picker
-          selectedValue={selectedView}
-          onValueChange={(itemValue) => setSelectedView(itemValue)}
-          style={styles.picker}
-        >
-          <Picker.Item label="All Campsites" value="all" />
-          <Picker.Item label="Favourites" value="favourites" />
-        </Picker>
+        {user.username !== "Guest" && (
+          <Picker
+            selectedValue={selectedView}
+            onValueChange={(itemValue) => setSelectedView(itemValue)}
+            style={styles.picker}
+          >
+            <Picker.Item label="All Campsites" value="all" />
+            <Picker.Item label="Favourites" value="favourites" />
+          </Picker>
+        )}
         <GooglePlacesAutocomplete
           placeholder="Search"
           fetchDetails={true}
@@ -139,17 +151,12 @@ const Map = () => {
           }}
         />
       </View>
-      <MapView style={styles.map} region={region} onPress={handleMapPress}>
-        {currentLocation && (
-          <Marker
-            coordinate={{
-              latitude: currentLocation.latitude,
-              longitude: currentLocation.longitude,
-            }}
-            title="Current Location"
-          />
-        )}
-
+      <MapView
+        style={styles.map}
+        region={region}
+        onPress={handleMapPress}
+        onRegionChangeComplete={(region) => setRegion(region)}
+      >
         {selectedView === "all"
           ? campsites.map((location) => (
               <Marker
@@ -159,7 +166,7 @@ const Map = () => {
                   longitude: location.longitude,
                 }}
                 title={location.name}
-                description={location.description}
+                description={location.category}
                 onPress={() => setSelectedCampsite(location)}
               />
             ))
@@ -189,50 +196,52 @@ const Map = () => {
           </>
         )}
 
-        {/* {destination && (
-        <>
+        {currentLocation && (
           <Marker
             coordinate={{
-              latitude: destination.latitude,
-              longitude: destination.longitude,
+              latitude: currentLocation.latitude,
+              longitude: currentLocation.longitude,
             }}
-            title={destination.title}
+            title="Current Location"
             pinColor="green"
           />
-          {currentLocation && (
-            <Polyline
-              coordinates={[
-                {
-                  latitude: currentLocation.latitude,
-                  longitude: currentLocation.longitude,
-                },
-                {
-                  latitude: destination.latitude,
-                  longitude: destination.longitude,
-                },
-              ]}
-              strokeColor="#3498DB"
-              strokeWidth={3}
-            />
-          )}
-        </>
-      )} */}
+        )}
+        <MapViewDirections
+          origin={currentLocation}
+          destination={destination}
+          apikey={GOOGLE_MAPS_API_KEY}
+          strokeColor="#3498DB"
+          strokeWidth={3}
+        />
+
+
+
       </MapView>
-
-      {customMarker && (
-        <Button title="Post New Campsite" onPress={() => goToPostCampsite()} />
-      )}
-
       {selectedCampsite && (
         <View style={styles.campsiteInfo}>
           <Text style={styles.title}>{selectedCampsite.name} </Text>
-          <Text>{selectedCampsite.average_rating.toFixed(1)}⭐ </Text>
+          {selectedCampsite.average_rating && (
+            <Text>{selectedCampsite.average_rating.toFixed(1)}⭐ </Text>
+          )}
           <Text style={styles.description}>{selectedCampsite.description}</Text>
-          <Button
-            title="Go to Individual Campsite"
-            onPress={() => goToIndividualCampsite(selectedCampsite)}
-          />
+          {user.username !== "Guest" ? (
+            <Button
+              title="Go to Individual Campsite"
+              onPress={() => goToIndividualCampsite(selectedCampsite)}
+            />
+          ) : (
+            <>
+              <Button
+                title="Please log in to see full details"
+                onPress={() => navigation.navigate("HomeScreen")}
+              />
+            </>
+          )}
         </View>
+      )}
+
+      {user.username !== "Guest" && customMarker && (
+        <Button title="Post New Campsite" onPress={() => goToPostCampsite()} />
       )}
     </View>
   );
