@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  Button,
   View,
   Text,
   StyleSheet,
@@ -12,19 +11,24 @@ import Header from "../components/Header";
 import { FlatList } from "react-native-web";
 import Images from "../components/images";
 import { AddToFavouritesButton } from "../components/FavouriteButton";
-import { useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { getCampsiteByID } from "../utils/api";
 import { useState, useEffect } from "react";
-import { ReviewList } from "../components/ReviewList";
-import UsernameButton from "../components/UsernameButton";
 
 import { UserContext } from "../utils/UserContext";
 import { useContext } from "react";
 
+import { ReviewList } from "../components/ReviewList";
+import UsernameButton from "../components/UsernameButton";
 import { getStars } from "../components/GetStars";
+import Button from "../components/Button"
 
 const IndividualCampsiteView = () => {
   const { user, setUser } = useContext(UserContext);
+const navigation = useNavigation()
+
+
+
   const handleUsernamePress = () => {};
 
   const route = useRoute();
@@ -38,7 +42,6 @@ const IndividualCampsiteView = () => {
           setCampsite(data);
         })
         .catch((err) => {
-          console.log(campsite);
           alert("Couldn't find campsite, please try reloading");
         });
     }
@@ -48,12 +51,13 @@ const IndividualCampsiteView = () => {
   return (
     <>
       <UsernameButton />
+      <AddToFavouritesButton campsiteId={campsiteId}/>
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollViewContent}
       >
         <Header subtitle={campsite.campsite_name} />
-        <AddToFavouritesButton />
+        <Button title="Back to Map" onPress={() =>navigation.navigate("SearchCampsiteView")}/>
 
         <View style={styles.imagesContainer}>
           <Images campsite={campsite} />
