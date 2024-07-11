@@ -9,8 +9,6 @@ export const postCampsite = (campsite) => {
   return parkfiniteApi
     .post("/campsites", campsite)
     .then((res) => {
-      console.log("Campsite pinned!");
-      console.log(res.data);
       return res.data;
     })
     .catch((error) => {
@@ -35,7 +33,7 @@ export const getCampsites = () => {
     .get("/campsites")
     .then((res) => {
       const allCampsites = res.data.map((campsite) => {
-        const object = {
+        return object = {
           campsite_id: campsite.campsite_id,
           latitude: campsite.campsite_latitude,
           longitude: campsite.campsite_longitude,
@@ -43,9 +41,7 @@ export const getCampsites = () => {
           description: campsite.description,
           average_rating: campsite.average_rating,
         };
-        return object;
       });
-
       return allCampsites;
     })
     .catch((error) => {

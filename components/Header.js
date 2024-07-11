@@ -9,7 +9,6 @@ const Header = ({ subtitle }) => {
         <SafeAreaView style={styles.header}>
             <Text style={styles.headerTitle}>{"PARKFINITE"}</Text>
             <Text style={styles.headerSubtitle}>{subtitle}</Text>
-            <UsernameButton/>
         </SafeAreaView>
     );
 };
@@ -17,7 +16,7 @@ const Header = ({ subtitle }) => {
 const styles = StyleSheet.create({
     header: {
         width: '100%',
-        height: 100,
+        height: 120,
         backgroundColor: 'green',
         alignItems: 'center',
         justifyContent: 'center',

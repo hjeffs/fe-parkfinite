@@ -1,43 +1,39 @@
-import React, { useState, useEffect, useContext } from 'react';
 import {
   StyleSheet,
   View,
   Alert,
   Text,
   TouchableOpacity,
-  Button
-} from 'react-native';
+  Button,
+} from "react-native";
 
-import MapView, { Marker, Polyline } from 'react-native-maps';
-import { GOOGLE_MAPS_API_KEY } from '../utils/GoogleMapsApiKey';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-import * as Location from 'expo-location';
+import MapView, { Marker, Polyline } from "react-native-maps";
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import { GOOGLE_MAPS_API_KEY } from "../utils/GoogleMapsApiKey";
+import * as Location from "expo-location";
 
-import { Picker } from '@react-native-picker/picker';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Picker } from "@react-native-picker/picker";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
-import { UserContext } from '../utils/UserContext';
+import React, { useState, useEffect, useContext } from "react";
+import { UserContext } from "../utils/UserContext";
 import { CustomMarkerContext } from "../utils/CustomMarkerContext";
-import { useContext } from "react";
 
-import { FontAwesome } from "@expo/vector-icons";
-
-import { getCampsites, getFavourites } from '../utils/api';
-
+import { getCampsites, getFavourites } from "../utils/api";
 
 const Map = () => {
   const navigation = useNavigation();
   const route = useRoute();
 
   const { user } = useContext(UserContext);
-  const {customMarker, setCustomMarker} = useContext(CustomMarkerContext)
+  const { customMarker, setCustomMarker } = useContext(CustomMarkerContext);
   
+  const [destination, setDestination] = useState(null)
   const [currentLocation, setCurrentLocation] = useState(null);
-  const [favourites, setFavourites] = useState([]);
   const [selectedCampsite, setSelectedCampsite] = useState(null);
   const [campsites, setCampsites] = useState([]);
-  const [selectedView, setSelectedView] = useState('all');
+  const [favourites, setFavourites] = useState([]);
+  const [selectedView, setSelectedView] = useState("all");
   const [region, setRegion] = useState({
     latitude: 53.483959,
     longitude: -2.244644,
@@ -46,24 +42,24 @@ const Map = () => {
   });
 
   useEffect(() => {
-    getCampsites().then((campsites) => {
-      setCampsites(campsites);
-    });
-  }, [customMarker]);
-
-  useEffect(() => {
     getFavourites(user.username).then((data) => {
       setFavourites(data);
     });
   }, [user.username]);
 
   useEffect(() => {
+    getCampsites().then((campsites) => {
+      setCampsites(campsites);
+    });
+  }, [customMarker]);
+
+  useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
+      if (status !== "granted") {
         Alert.alert(
-          'Permission needed',
-          'Please allow location access to use this feature.'
+          "Permission needed",
+          "Please allow location access to use this feature."
         );
         return;
       }
@@ -82,18 +78,20 @@ const Map = () => {
       setDestination(location);
     } else {
       Alert.alert(
-        'Location not available',
-        'Unable to retrieve your current location.'
+        "Location not available",
+        "Unable to retrieve your current location."
       );
     }
   };
 
   const goToIndividualCampsite = (campsite) => {
-    navigation.navigate('IndividualCampsiteView', { campsiteId: campsite.campsite_id });
+    navigation.navigate("IndividualCampsiteView", {
+      campsiteId: campsite.campsite_id,
+    });
   };
 
   const goToPostCampsite = () => {
-    navigation.navigate('PostCampsiteView');
+    navigation.navigate("PostCampsiteView");
   };
 
   return (
@@ -120,12 +118,12 @@ const Map = () => {
               };
               setRegion(location);
             } else {
-              console.log('No details available');
+              console.log("No details available");
             }
           }}
           query={{
             key: GOOGLE_MAPS_API_KEY,
-            language: 'en',
+            language: "en",
           }}
           styles={{
             container: {
@@ -137,53 +135,46 @@ const Map = () => {
               height: 40,
               fontSize: 16,
             },
-            listView: { backgroundColor: 'white' },
+            listView: { backgroundColor: "white" },
           }}
         />
       </View>
-      <MapView
-        style={styles.map}
-        region={region}
-        onPress={handleMapPress}
-      >
-
-      {/* {currentLocation && (
-        <Marker
-          coordinate={{
-            latitude: currentLocation.latitude,
-            longitude: currentLocation.longitude,
-          }}
-          title="Current Location"
-        />
-      )} */}
-
-        {selectedView === 'all' ? (
-          campsites.map((location) => (
-            <Marker
-              key={location.campsite_id}
-              coordinate={{
-                latitude: location.latitude,
-                longitude: location.longitude,
-              }}
-              title={location.name}
-              description={location.description}
-              onPress={() => setSelectedCampsite(location)}
-            />
-          ))
-        ) : (
-          favourites.map((location) => (
-            <Marker
-              key={location.campsite_id}
-              coordinate={{
-                latitude: location.campsite_latitude,
-                longitude: location.campsite_longitude,
-              }}
-              title={location.campsite_name}
-              description={location.description}
-              onPress={() => setSelectedCampsite(location)}
-            />
-          ))
+      <MapView style={styles.map} region={region} onPress={handleMapPress}>
+        {currentLocation && (
+          <Marker
+            coordinate={{
+              latitude: currentLocation.latitude,
+              longitude: currentLocation.longitude,
+            }}
+            title="Current Location"
+          />
         )}
+
+        {selectedView === "all"
+          ? campsites.map((location) => (
+              <Marker
+                key={location.campsite_id}
+                coordinate={{
+                  latitude: location.latitude,
+                  longitude: location.longitude,
+                }}
+                title={location.name}
+                description={location.description}
+                onPress={() => setSelectedCampsite(location)}
+              />
+            ))
+          : favourites.map((location) => (
+              <Marker
+                key={location.campsite_id}
+                coordinate={{
+                  latitude: location.campsite_latitude,
+                  longitude: location.campsite_longitude,
+                }}
+                title={location.campsite_name}
+                description={location.description}
+                onPress={() => setSelectedCampsite(location)}
+              />
+            ))}
 
         {customMarker && (
           <>
@@ -228,14 +219,14 @@ const Map = () => {
       )} */}
       </MapView>
 
-
-      {customMarker && <Button title="Post New Campsite" onPress={() => goToPostCampsite()} />}
-
+      {customMarker && (
+        <Button title="Post New Campsite" onPress={() => goToPostCampsite()} />
+      )}
 
       {selectedCampsite && (
         <View style={styles.campsiteInfo}>
           <Text style={styles.title}>{selectedCampsite.name} </Text>
-          <Text>{selectedCampsite.average_rating}⭐ </Text>
+          <Text>{selectedCampsite.average_rating.toFixed(1)}⭐ </Text>
           <Text style={styles.description}>{selectedCampsite.description}</Text>
           <Button
             title="Go to Individual Campsite"
@@ -248,13 +239,12 @@ const Map = () => {
 };
 
 const styles = StyleSheet.create({
-
   pickerAndSearchContainer: {
     marginTop: 80,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 10,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     zIndex: 1,
     paddingVertical: 1,
   },
@@ -264,35 +254,35 @@ const styles = StyleSheet.create({
   },
   container: {
     ...StyleSheet.absoluteFillObject,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
+    justifyContent: "flex-end",
+    alignItems: "center",
   },
   map: {
     ...StyleSheet.absoluteFillObject,
   },
   postButton: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 20,
-    left: '50%',
-    transform: [{ translateX: -75 }], // Adjusted translateX for better centering
-    backgroundColor: '#3498DB',
+    left: "50%",
+    transform: [{ translateX: -75 }],
+    backgroundColor: "#3498DB",
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
   },
   postButtonText: {
-    color: 'white',
+    color: "white",
     fontSize: 16,
   },
   campsiteInfo: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 80,
     left: 10,
     right: 10,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     padding: 20,
     borderRadius: 10,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,
     shadowRadius: 2,
@@ -300,7 +290,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   description: {
     fontSize: 14,
