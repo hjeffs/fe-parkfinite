@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getReviewByCampsiteID } from "../utils/api";
 import { View, Text, StyleSheet } from "react-native";
 import { PostReview } from "./PostReview";
+import { getStars } from "./GetStars";
 
 export const ReviewList = ({ campsite_id }) => {
   const [reviews, setReviews] = useState([]);
@@ -17,15 +18,10 @@ export const ReviewList = ({ campsite_id }) => {
       });
   }, [campsite_id]);
 
-  const getStars = (rating) => {
-    return "⭐".repeat(rating);
-  };
-
   return (
     <View>
       <PostReview setReviews={setReviews} campsite_id={campsite_id} />
-      {reviews.length &&
-        reviews.map((review) => {
+        {reviews.map((review) => {
           return (
             <View key={review.review_id} style={styles.reviewBox}>
               <Text style={styles.username}>{review.username}</Text>

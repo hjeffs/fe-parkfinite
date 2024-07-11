@@ -226,7 +226,7 @@ const Map = () => {
       {selectedCampsite && (
         <View style={styles.campsiteInfo}>
           <Text style={styles.title}>{selectedCampsite.name} </Text>
-          <Text>{selectedCampsite.average_rating}⭐ </Text>
+          <Text>{selectedCampsite.average_rating.toFixed(1)}⭐ </Text>
           <Text style={styles.description}>{selectedCampsite.description}</Text>
           <Button
             title="Go to Individual Campsite"
