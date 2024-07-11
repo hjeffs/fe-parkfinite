@@ -8,7 +8,7 @@ import Header from "../components/Header";
 import { formStyles } from "../components/PostCampsiteForm/PostCampsiteFormStyles";
 import MonthPicker from "../components/PostCampsiteForm/MonthPicker";
 import ContactForm from "../components/PostCampsiteForm/ContactForm";
-import ContactList from "../components/PostCampsiteForm/ContactList";
+import ContactList from "../components/PostCampsiteForm/ContactList"
 import CategoryPicker from "../components/PostCampsiteForm/CategoryPicker";
 import CostInputs from "../components/PostCampsiteForm/CostInputs";
 import Button from "../components/Button";
@@ -16,7 +16,6 @@ import Button from "../components/Button";
 import { postCampsite } from "../utils/api";
 import { useNavigation } from "@react-navigation/native";
 import UsernameButton from "../components/UsernameButton";
-
 const PostCampsiteView = () => {
   const navigation = useNavigation()
   const { user } = useContext(UserContext);
@@ -39,6 +38,13 @@ const PostCampsiteView = () => {
       contacts: [...prev.contacts, newContact],
     }));
     alert("A contact has been added for sumbission...");
+  };
+
+  const deleteContact = (index) => {
+    setNewCampsite(prev => ({
+      ...prev,
+      contacts: prev.contacts.filter((_, i) => i !== index)
+    }));
   };
 
   const handleSubmitCampsite = (newCampsite) => {
@@ -109,7 +115,10 @@ const PostCampsiteView = () => {
           handleMonthChange={handleChange}
         />
         <ContactForm addContact={addContact} />
-        <ContactList contacts={newCampsite.contacts}/>
+        <ContactList
+        contacts={newCampsite.contacts}
+        deleteContact={deleteContact}
+      />
       </View>
       <Button
         title="Submit New Campsite!"
