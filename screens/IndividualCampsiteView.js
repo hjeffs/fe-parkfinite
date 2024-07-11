@@ -21,6 +21,8 @@ import UsernameButton from "../components/UsernameButton";
 import { UserContext } from "../utils/UserContext";
 import { useContext } from "react";
 
+import { getStars } from "../components/GetStars";
+
 const IndividualCampsiteView = () => {
   const { user, setUser } = useContext(UserContext);
   const handleUsernamePress = () => {};
@@ -42,6 +44,7 @@ const IndividualCampsiteView = () => {
     }
   }, [campsiteId]);
 
+
   return (
     <>
       <UsernameButton />
@@ -57,16 +60,17 @@ const IndividualCampsiteView = () => {
         </View>
 
         <View style={styles.sectionContainer}>
-        <Text style={styles.contactInfo}>
-                    Contact Name: {campsite.average_review}
-                  </Text>
+
+
+        
+
           <Text style={styles.sections}>Contact Information</Text>
           <View style={styles.contactContainer}>
             {Array.isArray(campsite.contacts) &&
               campsite.contacts.map((person) => (
                 <View
-                  key={person.campsite_contact_id}
-                  style={styles.contactItem}
+                key={person.campsite_contact_id}
+                style={styles.contactItem}
                 >
                   <Text style={styles.contactInfo}>
                     Contact Name: {person.campsite_contact_name}
@@ -77,6 +81,8 @@ const IndividualCampsiteView = () => {
                   <Text style={styles.contactInfo}>
                     Email: {person.campsite_contact_email || "N/A"}
                   </Text>
+                <Text style={styles.contactItem}>{getStars(campsite.average_rating)}</Text>
+                <Text style={styles.contactItem}>Average Rating: {campsite.average_rating.toFixed(1)}</Text>
                 </View>
               ))}
           </View>
@@ -94,7 +100,7 @@ const IndividualCampsiteView = () => {
         </View>
         <View style={styles.sectionContainer}>
           <Text style={styles.sections}>Reviews</Text>
-          {campsite.campsiteId && <ReviewList campsite_id={campsiteId} />}
+          {campsite.campsite_id && <ReviewList campsite_id={campsiteId} />}
         </View>
       </ScrollView>
     </>
