@@ -9,8 +9,6 @@ export const postCampsite = (campsite) => {
   return parkfiniteApi
     .post("/campsites", campsite)
     .then((res) => {
-      console.log("Campsite pinned!");
-      console.log(res.data);
       return res.data;
     })
     .catch((error) => {
