@@ -13,12 +13,12 @@ import CategoryPicker from "../components/PostCampsiteForm/CategoryPicker";
 import CostInputs from "../components/PostCampsiteForm/CostInputs";
 import Button from "../components/Button";
 
-import { postCampsite } from "../utils/api";
+import { patchUserXP, postCampsite } from "../utils/api";
 import { useNavigation } from "@react-navigation/native";
 import UsernameButton from "../components/UsernameButton";
 const PostCampsiteView = () => {
   const navigation = useNavigation()
-  const { user } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
   const {customMarker, setCustomMarker} = useContext(CustomMarkerContext)
   const [newCampsite, setNewCampsite] = useState({
     contacts: []
@@ -60,6 +60,8 @@ const PostCampsiteView = () => {
         setNewCampsite({
           contacts: []
         });
+        patchUserXP(user.username, 100)
+        setUser({ username: user.username, xp: user.xp + 100 });
         setCustomMarker()
         navigation.navigate("SearchCampsiteView")
       })
